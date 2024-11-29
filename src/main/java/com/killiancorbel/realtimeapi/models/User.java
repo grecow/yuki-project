@@ -9,9 +9,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique=true)
     private String email;
     private String password;
+    private String appId;
+    @Column(unique=true)
+    private String pushId;
 
     public String getEmail() {
         return email;
@@ -38,5 +40,21 @@ public class User {
 
     public void setPlainPassword(String password) {
         this.password = password;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getPushId() {
+        return pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }

@@ -1,9 +1,9 @@
 package com.killiancorbel.realtimeapi.repositories;
 
 import com.killiancorbel.realtimeapi.models.User;
+import com.killiancorbel.realtimeapi.models.YukiData;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByEmail(String email);
-    User findByPushId(String pushId);
+public interface YukiRepository extends JpaRepository<YukiData, Integer> {
+    YukiData findByUser(User u);
 }

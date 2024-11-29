@@ -1,0 +1,32 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.killiancorbel'
+version = '0.0.1'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(19)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'com.mysql:mysql-connector-j'
+	implementation 'io.jsonwebtoken:jjwt:0.12.6'
+	implementation 'com.google.code.gson:gson:2.11.0'
+	implementation 'javax.xml.bind:jaxb-api:2.1'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+}

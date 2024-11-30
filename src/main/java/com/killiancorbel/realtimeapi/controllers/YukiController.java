@@ -9,6 +9,7 @@ import com.killiancorbel.realtimeapi.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,15 @@ public class YukiController {
             yukiData.setTokens(5000);
             yukiRepository.save(yukiData);
         }
+        return new YukiDataRes(yukiData.getTokens());
+    }
+
+    @PostMapping("/tokens/{id}")
+    public @ResponseBody YukiDataRes removeTokens(@PathVariable String id, @RequestBody YukiDataRes yukiDataReq) {
+        User user = userRepository.findByPushId(id);
+        YukiData yukiData = yukiRepository.findByUser(user);
+        yukiData.setTokens(yukiDataReq.getTokens());
+        yukiRepository.save(yukiData);
         return new YukiDataRes(yukiData.getTokens());
     }
 }

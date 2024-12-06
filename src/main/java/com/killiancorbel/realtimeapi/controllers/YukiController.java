@@ -9,7 +9,6 @@ import com.killiancorbel.realtimeapi.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +44,29 @@ public class YukiController {
             yukiData.setTokens(5000);
             yukiRepository.save(yukiData);
         }
-        return new YukiDataRes(yukiData.getTokens());
+        return new YukiDataRes(yukiData);
+    }
+
+    @PostMapping("/register/{id}")
+    public @ResponseBody YukiDataRes register(@PathVariable String id, @RequestBody(required = false) YukiData body) {
+        User user = userRepository.findByPushId(id);
+        if (user == null) {
+            user = new User();
+            user.setAppId("yuki");
+            user.setPushId(id);
+            userRepository.save(user);
+        }
+        YukiData yukiData = yukiRepository.findByUser(user);
+        if (yukiData == null) {
+            yukiData = new YukiData();
+            yukiData.setUser(user);
+            yukiData.setTokens(5000);
+        }
+        yukiData.setGoal(body.getGoal());
+        yukiData.setLevel(body.getLevel());
+        yukiData.setLanguage(body.getLanguage());
+        yukiRepository.save(yukiData);
+        return new YukiDataRes(yukiData);
     }
 
     @PostMapping("/tokens/{id}")
@@ -54,6 +75,6 @@ public class YukiController {
         YukiData yukiData = yukiRepository.findByUser(user);
         yukiData.setTokens(yukiDataReq.getTokens());
         yukiRepository.save(yukiData);
-        return new YukiDataRes(yukiData.getTokens());
+        return new YukiDataRes(yukiData);
     }
 }

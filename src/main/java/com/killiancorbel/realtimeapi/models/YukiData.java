@@ -11,6 +11,9 @@ public class YukiData {
     @OneToOne
     private User user;
     private int tokens;
+    private int level;
+    private String language;
+    private int goal;
 
     public Long getId() {
         return id;
@@ -34,5 +37,29 @@ public class YukiData {
 
     public void setTokens(int tokens) {
         this.tokens = tokens;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

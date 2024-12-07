@@ -19,6 +19,14 @@ public class YukiDataRes {
         this.tokens = tokens;
     }
 
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
+    }
+
     public String getPromptFromModel(YukiData yukiData) {
         String prompt = "Your knowledge cutoff is 2024-10. You are a helpful " + yukiData.getLanguage() + " teacher.";
         switch (yukiData.getLevel()) {

@@ -13,6 +13,7 @@ public class YukiData {
     private int tokens;
     private int level;
     private String language;
+    private String nativeLanguage;
     private int goal;
 
     public Long getId() {
@@ -61,5 +62,16 @@ public class YukiData {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getNativeLanguage() {
+        if (nativeLanguage == null) {
+            return "French";
+        }
+        return nativeLanguage;
+    }
+
+    public void setNativeLanguage(String nativeLanguage) {
+        this.nativeLanguage = nativeLanguage;
     }
 }

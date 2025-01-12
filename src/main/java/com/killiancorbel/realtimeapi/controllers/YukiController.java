@@ -65,6 +65,7 @@ public class YukiController {
         yukiData.setGoal(body.getGoal());
         yukiData.setLevel(body.getLevel());
         yukiData.setLanguage(body.getLanguage());
+        yukiData.setNativeLanguage(body.getNativeLanguage());
         yukiRepository.save(yukiData);
         return new YukiDataRes(yukiData);
     }

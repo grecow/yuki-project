@@ -11,6 +11,11 @@ public class YukiDataRes {
         this.prompt = getPromptFromModel(yukiData);
     }
 
+    public YukiDataRes(int tokens) {
+        this.tokens = tokens;
+        this.prompt = "";
+    }
+
     public int getTokens() {
         return tokens;
     }

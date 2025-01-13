@@ -12,6 +12,7 @@ public class YukiData {
     private User user;
     private int tokens;
     private int level;
+    private int goal = 0;
     private String language;
     private boolean toCorrect;
 
@@ -63,5 +64,13 @@ public class YukiData {
 
     public void setToCorrect(boolean toCorrect) {
         this.toCorrect = toCorrect;
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
     }
 }

@@ -68,7 +68,7 @@ public class YukiController {
     }
 
     @PostMapping("/tokens/{id}")
-    public @ResponseBody YukiDataRes removeTokens(@PathVariable String id, @RequestBody YukiDataRes yukiDataReq) {
+    public @ResponseBody YukiDataRes removeTokens(@PathVariable String id, @RequestBody(required = false) YukiDataRes yukiDataReq) {
         User user = userRepository.findByPushId(id);
         YukiData yukiData = yukiRepository.findByUser(user);
         yukiData.setTokens(yukiDataReq.getTokens());

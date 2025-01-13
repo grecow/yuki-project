@@ -62,10 +62,9 @@ public class YukiController {
             yukiData.setUser(user);
             yukiData.setTokens(5000);
         }
-        yukiData.setGoal(body.getGoal());
         yukiData.setLevel(body.getLevel());
         yukiData.setLanguage(body.getLanguage());
-        yukiData.setNativeLanguage(body.getNativeLanguage());
+        yukiData.setToCorrect(body.isToCorrect());
         yukiRepository.save(yukiData);
         return new YukiDataRes(yukiData);
     }

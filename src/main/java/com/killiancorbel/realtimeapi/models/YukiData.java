@@ -13,8 +13,7 @@ public class YukiData {
     private int tokens;
     private int level;
     private String language;
-    private String nativeLanguage;
-    private int goal;
+    private boolean toCorrect;
 
     public Long getId() {
         return id;
@@ -44,9 +43,6 @@ public class YukiData {
         return level;
     }
 
-    public int getGoal() {
-        return goal;
-    }
 
     public String getLanguage() {
         return language;
@@ -56,22 +52,16 @@ public class YukiData {
         this.level = level;
     }
 
-    public void setGoal(int goal) {
-        this.goal = goal;
-    }
 
     public void setLanguage(String language) {
         this.language = language;
     }
 
-    public String getNativeLanguage() {
-        if (nativeLanguage == null) {
-            return "French";
-        }
-        return nativeLanguage;
+    public boolean isToCorrect() {
+        return toCorrect;
     }
 
-    public void setNativeLanguage(String nativeLanguage) {
-        this.nativeLanguage = nativeLanguage;
+    public void setToCorrect(boolean toCorrect) {
+        this.toCorrect = toCorrect;
     }
 }

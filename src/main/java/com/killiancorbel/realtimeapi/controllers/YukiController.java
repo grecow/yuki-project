@@ -9,6 +9,7 @@ import com.killiancorbel.realtimeapi.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +33,7 @@ public class YukiController {
     public @ResponseBody YukiDataRes getCurrentYukiData(@PathVariable String id) {
         User user = userRepository.findByPushId(id);
         if (user == null) {
-            user = new User();
-            user.setAppId("yuki");
-            user.setPushId(id);
-            userRepository.save(user);
+            throw new AccessDeniedException("no user");
         }
         YukiData yukiData = yukiRepository.findByUser(user);
         if (yukiData == null) {

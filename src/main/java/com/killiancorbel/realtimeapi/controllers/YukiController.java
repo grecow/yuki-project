@@ -77,6 +77,8 @@ public class YukiController {
             YukiDataRes ret = new YukiDataRes();
             ret.setPrompt(getPromptFromModel(yukiData));
             ret.setTokens(yukiData.getTokens());
+            logger.info("tokens : " + ret.getTokens());
+            logger.info("prompt : " + ret.getPrompt());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");

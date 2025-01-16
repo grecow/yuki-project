@@ -28,7 +28,7 @@ public class JwtUtil {
         Claims claims = Jwts.claims().subject(user.getEmail()).build();
         Date tokenCreateTime = new Date();
         Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
-        return Jwts.builder().claims(claims).expiration(tokenValidity).signWith(SignatureAlgorithm.HS256, secret_key)
+        return Jwts.builder().claims(claims).expiration(tokenValidity).signWith(SignatureAlgorithm.RS256, secret_key)
                 .compact();
     }
 

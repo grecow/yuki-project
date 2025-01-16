@@ -1,5 +1,8 @@
 package com.killiancorbel.realtimeapi.models.responses;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class YukiDataRes {
     private int tokens;
     private String prompt;

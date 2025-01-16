@@ -63,7 +63,7 @@ public class YukiController {
         }
     }
 
-    @GetMapping("/get")
+    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public YukiRes getCurrentYukiData(@RequestHeader("Authorization") String authorizationHeader) {
         try {

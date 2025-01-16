@@ -67,6 +67,7 @@ public class YukiController {
     @ResponseBody
     public YukiRes getCurrentYukiData(@RequestHeader("Authorization") String authorizationHeader) {
         try {
+            logger.info("token google : " + authorizationHeader);
             String token = authorizationHeader.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
             User user = userRepository.findByEmail(decodedToken.getEmail());

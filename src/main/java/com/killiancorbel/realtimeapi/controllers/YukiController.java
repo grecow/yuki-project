@@ -61,7 +61,7 @@ public class YukiController {
         }
     }
 
-    @GetMapping(value = "/get")
+    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody YukiDataRes getCurrentYukiData(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = authorizationHeader.replace("Bearer ", "");

@@ -35,13 +35,9 @@ public class YukiController {
     private YukiRepository yukiRepository;
     @Value("${app.firebase-configuration-file}")
     private String firebaseConfigPath;
-    private final AuthenticationManager authenticationManager;
     private final Logger logger = LoggerFactory.getLogger(YukiController.class);
 
-    private JwtUtil jwtUtil;
-    public YukiController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+    public YukiController() {
     }
 
     @PostConstruct

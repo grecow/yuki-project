@@ -11,6 +11,7 @@ import com.killiancorbel.realtimeapi.models.responses.YukiDataRes;
 import com.killiancorbel.realtimeapi.repositories.UserRepository;
 import com.killiancorbel.realtimeapi.repositories.YukiRepository;
 import com.killiancorbel.realtimeapi.utils.JwtUtil;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +39,22 @@ public class YukiController {
     public YukiController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+    }
+
+    @PostConstruct
+    public void initFirebase() {
         try {
-            FileInputStream serviceAccount =
-                    new FileInputStream(firebaseConfigPath);
+            if (FirebaseApp.getApps().isEmpty()) {
+                FileInputStream serviceAccount =
+                        new FileInputStream(firebaseConfigPath);
 
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .build();
+                FirebaseOptions options = new FirebaseOptions.Builder()
+                        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                        .build();
 
-            FirebaseApp.initializeApp(options);
-            logger.info("Firebase application initialized");
+                FirebaseApp.initializeApp(options);
+                logger.info("Firebase application initialized");
+            }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

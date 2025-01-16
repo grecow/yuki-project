@@ -103,7 +103,10 @@ public class YukiController {
         yukiData.setLanguage(body.getLanguage());
         yukiData.setToCorrect(body.isToCorrect());
         yukiRepository.save(yukiData);
-        return new YukiDataRes(yukiData);
+        YukiDataRes ret = new YukiDataRes();
+        ret.setPrompt(getPromptFromModel(yukiData));
+        ret.setTokens(yukiData.getTokens());
+        return ret;
     }
 
     @PostMapping("/tokens")
@@ -118,7 +121,10 @@ public class YukiController {
             YukiData yukiData = yukiRepository.findByUser(user);
             yukiData.setTokens(yukiDataReq.getTokens());
             yukiRepository.save(yukiData);
-            return new YukiDataRes(yukiData);
+            YukiDataRes ret = new YukiDataRes();
+            ret.setPrompt(getPromptFromModel(yukiData));
+            ret.setTokens(yukiData.getTokens());
+            return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }

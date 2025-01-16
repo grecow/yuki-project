@@ -77,7 +77,10 @@ public class YukiController {
                 yukiData.setTokens(5000);
                 yukiRepository.save(yukiData);
             }
-            return new YukiDataRes(yukiData);
+            logger.info(yukiData.toString());
+            YukiDataRes ret = new YukiDataRes(yukiData);
+            logger.info(ret.toString());
+            return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }

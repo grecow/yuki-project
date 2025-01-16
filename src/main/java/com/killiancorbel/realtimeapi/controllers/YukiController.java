@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseToken;
 import com.killiancorbel.realtimeapi.models.User;
 import com.killiancorbel.realtimeapi.models.YukiData;
 import com.killiancorbel.realtimeapi.models.responses.YukiDataRes;
+import com.killiancorbel.realtimeapi.models.responses.YukiRes;
 import com.killiancorbel.realtimeapi.repositories.UserRepository;
 import com.killiancorbel.realtimeapi.repositories.YukiRepository;
 import com.killiancorbel.realtimeapi.utils.JwtUtil;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -61,8 +63,9 @@ public class YukiController {
         }
     }
 
-    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody YukiDataRes getCurrentYukiData(@RequestHeader("Authorization") String authorizationHeader) {
+    @GetMapping("/get")
+    @ResponseBody
+    public YukiRes getCurrentYukiData(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
@@ -74,7 +77,7 @@ public class YukiController {
             if (yukiData == null) {
                 throw new AccessDeniedException("Not authorized");
             }
-            YukiDataRes ret = new YukiDataRes();
+            YukiRes ret = new YukiRes();
             ret.setPrompt(getPromptFromModel(yukiData));
             ret.setTokens(yukiData.getTokens());
             logger.info("tokens : " + ret.getTokens());
@@ -86,7 +89,7 @@ public class YukiController {
     }
 
     @PostMapping("/register")
-    public @ResponseBody YukiDataRes register(@RequestBody(required = false) YukiData body) {
+    public @ResponseBody YukiRes register(@RequestBody(required = false) YukiData body) {
         User user = userRepository.findByEmail(body.getUser().getEmail());
         if (user == null) {
             user = new User();
@@ -105,14 +108,14 @@ public class YukiController {
         yukiData.setLanguage(body.getLanguage());
         yukiData.setToCorrect(body.isToCorrect());
         yukiRepository.save(yukiData);
-        YukiDataRes ret = new YukiDataRes();
+        YukiRes ret = new YukiRes();
         ret.setPrompt(getPromptFromModel(yukiData));
         ret.setTokens(yukiData.getTokens());
         return ret;
     }
 
     @PostMapping("/tokens")
-    public @ResponseBody YukiDataRes removeTokens(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData yukiDataReq) {
+    public @ResponseBody ResponseEntity removeTokens(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData yukiDataReq) {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
@@ -123,10 +126,7 @@ public class YukiController {
             YukiData yukiData = yukiRepository.findByUser(user);
             yukiData.setTokens(yukiDataReq.getTokens());
             yukiRepository.save(yukiData);
-            YukiDataRes ret = new YukiDataRes();
-            ret.setPrompt(getPromptFromModel(yukiData));
-            ret.setTokens(yukiData.getTokens());
-            return ret;
+            return ResponseEntity.ok("ok");
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }

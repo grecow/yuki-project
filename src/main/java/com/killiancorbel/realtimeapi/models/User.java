@@ -17,7 +17,9 @@ public class User {
     private String pushId;
     @JsonProperty("original_app_user_id")
     private String originalAppUserId;
+    @Column(unique=true)
     private String uid;
+    private String fullName;
 
     public String getEmail() {
         return email;
@@ -76,5 +78,13 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

@@ -74,6 +74,7 @@ public class YukiController {
             ret.setPrompt(getPromptFromModel(yukiData));
             ret.setTokens(yukiData.getTokens());
             ret.setEmail(user.getEmail());
+            ret.setFullName(user.getFullName());
             logger.info("tokens : " + ret.getTokens());
             logger.info("prompt : " + ret.getPrompt());
             return ret;
@@ -84,13 +85,14 @@ public class YukiController {
 
     @PostMapping("/register")
     public @ResponseBody YukiRes register(@RequestBody(required = false) YukiData body) {
-        User user = userRepository.findByEmail(body.getUser().getEmail());
+        User user = userRepository.findByUid(body.getUser().getUid());
         if (user == null) {
             user = new User();
             user.setAppId("yuki");
             user.setPushId(body.getUser().getPushId());
             user.setEmail(body.getUser().getEmail());
             user.setUid(body.getUser().getUid());
+            user.setFullName(body.getUser().getFullName());
             userRepository.save(user);
         }
         YukiData yukiData = yukiRepository.findByUser(user);
@@ -114,7 +116,7 @@ public class YukiController {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-            User user = userRepository.findByEmail(decodedToken.getEmail());
+            User user = userRepository.findByUid(decodedToken.getUid());
             if (user == null) {
                 throw new AccessDeniedException("no user");
             }
@@ -142,7 +144,7 @@ public class YukiController {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-            User user = userRepository.findByEmail(decodedToken.getEmail());
+            User user = userRepository.findByUid(decodedToken.getUid());
             if (user == null) {
                 throw new AccessDeniedException("no user");
             }
@@ -160,12 +162,13 @@ public class YukiController {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-            User user = userRepository.findByEmail(decodedToken.getEmail());
+            User user = userRepository.findByUid(decodedToken.getUid());
             if (user == null) {
                 user = new User();
                 user.setAppId("yuki");
                 user.setPushId(body.getUser().getPushId());
                 user.setEmail(body.getUser().getEmail());
+                user.setFullName(body.getUser().getFullName());
                 user.setUid(body.getUser().getUid());
                 userRepository.save(user);
             }
@@ -177,7 +180,7 @@ public class YukiController {
             }
             yukiRepository.save(yukiData);
             YukiRes ret = new YukiRes();
-            ret.setPrompt(getPromptFromModel(yukiData));
+            ret.setPrompt("");
             ret.setTokens(yukiData.getTokens());
             return ret;
         } catch (Exception e) {

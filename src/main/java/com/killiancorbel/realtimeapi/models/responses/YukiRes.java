@@ -7,6 +7,7 @@ public class YukiRes {
     private int tokens;
     private String prompt;
     private String email;
+    private String fullName;
 
     public int getTokens() {
         return tokens;
@@ -30,5 +31,13 @@ public class YukiRes {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

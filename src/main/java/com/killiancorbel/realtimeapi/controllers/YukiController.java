@@ -75,6 +75,7 @@ public class YukiController {
             ret.setTokens(yukiData.getTokens());
             ret.setEmail(user.getEmail());
             ret.setFullName(user.getFullName());
+            ret.setPremium(yukiData.isPremium());
             logger.info("tokens : " + ret.getTokens());
             logger.info("prompt : " + ret.getPrompt());
             return ret;
@@ -108,6 +109,9 @@ public class YukiController {
         YukiRes ret = new YukiRes();
         ret.setPrompt(getPromptFromModel(yukiData));
         ret.setTokens(yukiData.getTokens());
+        ret.setEmail(user.getEmail());
+        ret.setFullName(user.getFullName());
+        ret.setPremium(yukiData.isPremium());
         return ret;
     }
 
@@ -133,6 +137,9 @@ public class YukiController {
             YukiRes ret = new YukiRes();
             ret.setPrompt(getPromptFromModel(yukiData));
             ret.setTokens(yukiData.getTokens());
+            ret.setEmail(user.getEmail());
+            ret.setFullName(user.getFullName());
+            ret.setPremium(yukiData.isPremium());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
@@ -180,8 +187,11 @@ public class YukiController {
             }
             yukiRepository.save(yukiData);
             YukiRes ret = new YukiRes();
-            ret.setPrompt("");
+            ret.setPrompt(getPromptFromModel(yukiData));
             ret.setTokens(yukiData.getTokens());
+            ret.setEmail(user.getEmail());
+            ret.setFullName(user.getFullName());
+            ret.setPremium(yukiData.isPremium());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");

@@ -8,6 +8,7 @@ public class YukiRes {
     private String prompt;
     private String email;
     private String fullName;
+    private boolean premium;
 
     public int getTokens() {
         return tokens;
@@ -39,5 +40,13 @@ public class YukiRes {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public void setPremium(boolean premium) {
+        this.premium = premium;
     }
 }

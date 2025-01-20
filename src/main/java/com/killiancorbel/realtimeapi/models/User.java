@@ -17,6 +17,7 @@ public class User {
     private String pushId;
     @JsonProperty("original_app_user_id")
     private String originalAppUserId;
+    private String uid;
 
     public String getEmail() {
         return email;
@@ -67,5 +68,13 @@ public class User {
 
     public void setOriginalAppUserId(String originalAppUserId) {
         this.originalAppUserId = originalAppUserId;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

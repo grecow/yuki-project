@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +55,7 @@ public class YukiController {
         }
     }
 
-    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/get")
     @ResponseBody
     public YukiRes getCurrentYukiData(@RequestHeader("Authorization") String authorizationHeader) {
         try {
@@ -74,6 +73,7 @@ public class YukiController {
             YukiRes ret = new YukiRes();
             ret.setPrompt(getPromptFromModel(yukiData));
             ret.setTokens(yukiData.getTokens());
+            ret.setEmail(user.getEmail());
             logger.info("tokens : " + ret.getTokens());
             logger.info("prompt : " + ret.getPrompt());
             return ret;
@@ -108,6 +108,34 @@ public class YukiController {
         return ret;
     }
 
+    @PostMapping("/onboarding/update")
+    public @ResponseBody YukiRes updateOnboarding(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData body) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByEmail(decodedToken.getEmail());
+            if (user == null) {
+                throw new AccessDeniedException("no user");
+            }
+            YukiData yukiData = yukiRepository.findByUser(user);
+            if (yukiData == null) {
+                yukiData = new YukiData();
+                yukiData.setUser(user);
+                yukiData.setTokens(5000);
+            }
+            yukiData.setLevel(body.getLevel());
+            yukiData.setLanguage(body.getLanguage());
+            yukiData.setToCorrect(body.isToCorrect());
+            yukiRepository.save(yukiData);
+            YukiRes ret = new YukiRes();
+            ret.setPrompt(getPromptFromModel(yukiData));
+            ret.setTokens(yukiData.getTokens());
+            return ret;
+        } catch (Exception e) {
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
+
     @PostMapping("/tokens")
     public @ResponseBody ResponseEntity removeTokens(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData yukiDataReq) {
         try {
@@ -121,6 +149,35 @@ public class YukiController {
             yukiData.setTokens(yukiDataReq.getTokens());
             yukiRepository.save(yukiData);
             return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
+
+    @PostMapping("/temp/register")
+    public @ResponseBody YukiRes registerTemp(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData body) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByEmail(decodedToken.getEmail());
+            if (user == null) {
+                user = new User();
+                user.setAppId("yuki");
+                user.setPushId(body.getUser().getPushId());
+                user.setEmail(body.getUser().getEmail());
+                userRepository.save(user);
+            }
+            YukiData yukiData = yukiRepository.findByUser(user);
+            if (yukiData == null) {
+                yukiData = new YukiData();
+                yukiData.setUser(user);
+                yukiData.setTokens(5000);
+            }
+            yukiRepository.save(yukiData);
+            YukiRes ret = new YukiRes();
+            ret.setPrompt(getPromptFromModel(yukiData));
+            ret.setTokens(yukiData.getTokens());
+            return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }

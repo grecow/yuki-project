@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class YukiRes {
     private int tokens;
     private String prompt;
+    private String email;
 
     public int getTokens() {
         return tokens;
@@ -21,5 +22,13 @@ public class YukiRes {
 
     public void setPrompt(String prompt) {
         this.prompt = prompt;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -15,6 +15,7 @@ public class YukiData {
     private int goal = 0;
     private String language;
     private boolean toCorrect;
+    private boolean premium = false;
 
     public Long getId() {
         return id;
@@ -72,5 +73,13 @@ public class YukiData {
 
     public void setGoal(int goal) {
         this.goal = goal;
+    }
+
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public void setPremium(boolean premium) {
+        this.premium = premium;
     }
 }

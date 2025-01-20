@@ -1,5 +1,6 @@
 package com.killiancorbel.realtimeapi.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -14,6 +15,8 @@ public class User {
     private String appId;
     @Column(unique=true)
     private String pushId;
+    @JsonProperty("original_app_user_id")
+    private String originalAppUserId;
 
     public String getEmail() {
         return email;
@@ -56,5 +59,13 @@ public class User {
 
     public void setPushId(String pushId) {
         this.pushId = pushId;
+    }
+
+    public String getOriginalAppUserId() {
+        return originalAppUserId;
+    }
+
+    public void setOriginalAppUserId(String originalAppUserId) {
+        this.originalAppUserId = originalAppUserId;
     }
 }

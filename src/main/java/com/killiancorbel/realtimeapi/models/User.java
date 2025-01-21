@@ -13,7 +13,6 @@ public class User {
     private String email;
     private String password;
     private String appId;
-    @Column(unique=true)
     private String pushId;
     @JsonProperty("original_app_user_id")
     private String originalAppUserId;

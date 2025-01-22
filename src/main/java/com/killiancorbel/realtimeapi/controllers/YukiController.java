@@ -223,7 +223,7 @@ public class YukiController {
         }
 
         // Ton et style
-        prompt += "Your personality is friendly and dynamic. Use humor and enthusiasm. Adapt language and topics to the student's level. Keep responses short and to the point. Encourage speaking as much as possible. ";
+        prompt += "Your personality is friendly and dynamic. Use humor and enthusiasm. Adapt language and topics to the student's level. Keep responses short and to the point. Each answer should be thought not to be over 240 characters. Encourage speaking as much as possible. ";
 
         // Introduction simplifiée avec suggestion de sujet aléatoire
         prompt += "Start with: 'Hey! It's Yuki.' Then immediately suggest a random topic suitable for the student's level. For example, 'Let’s talk about your favorite food!' or 'What do you think about technology today?' If the student has another idea, follow their lead. ";

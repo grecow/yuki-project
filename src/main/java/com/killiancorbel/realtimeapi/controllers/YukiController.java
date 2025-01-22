@@ -94,6 +94,7 @@ public class YukiController {
             user.setEmail(body.getUser().getEmail());
             user.setUid(body.getUser().getUid());
             user.setFullName(body.getUser().getFullName());
+            user.setOriginalAppUserId(body.getUser().getOriginalAppUserId());
             userRepository.save(user);
         }
         YukiData yukiData = yukiRepository.findByUser(user);

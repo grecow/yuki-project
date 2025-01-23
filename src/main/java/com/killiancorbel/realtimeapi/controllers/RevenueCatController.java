@@ -29,17 +29,17 @@ public class RevenueCatController {
     @PostMapping("/webhook")
     @ResponseBody
     public ResponseEntity manageWebhook(@RequestBody(required = false)RevenueCatReq revenueCatReq) {
-        String uid = revenueCatReq.getEvent().getSubscriber_attributes().getUid().getValue();
-        User u = null;
-        if (uid == null) {
-            u = userRepository.findByOriginalAppUserId(revenueCatReq.getEvent().getOriginal_app_user_id());
-        } else {
-            u = userRepository.findByUid(uid);
-            u.setOriginalAppUserId(revenueCatReq.getEvent().getOriginal_app_user_id());
-            userRepository.save(u);
-        }
+        String customerId = revenueCatReq.getEvent().getOriginal_app_user_id();
+        User u = userRepository.findByOriginalAppUserId(customerId);
         if (u == null) {
-            return ResponseEntity.badRequest().body("User not found");
+            if (revenueCatReq.getEvent().getSubscriber_attributes().getUid() != null) {
+                String uid = revenueCatReq.getEvent().getSubscriber_attributes().getUid().getValue();
+                u = userRepository.findByUid(uid);
+                u.setOriginalAppUserId(revenueCatReq.getEvent().getOriginal_app_user_id());
+                userRepository.save(u);
+            } else {
+                return ResponseEntity.badRequest().body("User not found");
+            }
         }
         YukiData yd = yukiRepository.findByUser(u);
         switch (revenueCatReq.getEvent().getType()) {

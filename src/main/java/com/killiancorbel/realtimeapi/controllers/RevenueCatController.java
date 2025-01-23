@@ -5,7 +5,6 @@ import com.killiancorbel.realtimeapi.models.YukiData;
 import com.killiancorbel.realtimeapi.models.requests.revenuecat.RevenueCatReq;
 import com.killiancorbel.realtimeapi.repositories.UserRepository;
 import com.killiancorbel.realtimeapi.repositories.YukiRepository;
-import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class RevenueCatController {
         switch (revenueCatReq.getEvent().getType()) {
             case "INITIAL_PURCHASE", "RENEWAL", "UNCANCELLATION":
                 yd.setPremium(true);
-                yd.setTokens(5000);
+                yd.setTokens(10000);
                 yukiRepository.save(yd);
                 break;
             case "EXPIRATION", "CANCELLATION":

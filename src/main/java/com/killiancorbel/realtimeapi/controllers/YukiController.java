@@ -59,7 +59,6 @@ public class YukiController {
     @ResponseBody
     public YukiRes getCurrentYukiData(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            logger.info("token google : " + authorizationHeader);
             String token = authorizationHeader.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
             User user = userRepository.findByUid(decodedToken.getUid());
@@ -76,8 +75,6 @@ public class YukiController {
             ret.setEmail(user.getEmail());
             ret.setFullName(user.getFullName());
             ret.setPremium(yukiData.isPremium());
-            logger.info("tokens : " + ret.getTokens());
-            logger.info("prompt : " + ret.getPrompt());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
@@ -101,7 +98,7 @@ public class YukiController {
         if (yukiData == null) {
             yukiData = new YukiData();
             yukiData.setUser(user);
-            yukiData.setTokens(5000);
+            yukiData.setTokens(10000);
         }
         yukiData.setLevel(body.getLevel());
         yukiData.setLanguage(body.getLanguage());
@@ -184,7 +181,7 @@ public class YukiController {
             if (yukiData == null) {
                 yukiData = new YukiData();
                 yukiData.setUser(user);
-                yukiData.setTokens(5000);
+                yukiData.setTokens(10000);
             }
             yukiRepository.save(yukiData);
             YukiRes ret = new YukiRes();
@@ -223,7 +220,7 @@ public class YukiController {
         }
 
         // Ton et style
-        prompt += "Your personality is friendly and dynamic. Use humor and enthusiasm. Adapt language and topics to the student's level. Keep responses short and to the point. Each answer should be thought not to be over 240 characters. Encourage speaking as much as possible. ";
+        prompt += "Your personality is friendly and dynamic. Use humor and enthusiasm. Adapt language and topics to the student's level. Keep responses short and to the point. Each answer should be thought not to be over 200 characters. Encourage speaking as much as possible. ";
 
         // Introduction simplifiée avec suggestion de sujet aléatoire
         prompt += "Start with: 'Hey! It's Yuki.' Then immediately suggest a random topic suitable for the student's level. For example, 'Let’s talk about your favorite food!' or 'What do you think about technology today?' If the student has another idea, follow their lead. ";

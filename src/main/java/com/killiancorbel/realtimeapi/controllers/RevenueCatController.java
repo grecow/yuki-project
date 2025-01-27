@@ -29,7 +29,7 @@ public class RevenueCatController {
     @ResponseBody
     public ResponseEntity manageWebhook(@RequestBody(required = false)RevenueCatReq revenueCatReq) {
         String customerId = revenueCatReq.getEvent().getOriginal_app_user_id();
-        User u = userRepository.findByOriginalAppUserId(customerId);
+        User u = userRepository.findAllByOriginalAppUserId(customerId).getLast();
         if (u == null) {
             if (revenueCatReq.getEvent().getSubscriber_attributes().getUid() != null) {
                 String uid = revenueCatReq.getEvent().getSubscriber_attributes().getUid().getValue();

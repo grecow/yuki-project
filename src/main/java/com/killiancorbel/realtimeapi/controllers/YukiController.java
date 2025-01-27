@@ -85,13 +85,20 @@ public class YukiController {
     public @ResponseBody YukiRes register(@RequestBody(required = false) YukiData body) {
         User user = userRepository.findByUid(body.getUser().getUid());
         if (user == null) {
-            user = new User();
-            user.setAppId("yuki");
-            user.setPushId(body.getUser().getPushId());
-            user.setEmail(body.getUser().getEmail());
-            user.setUid(body.getUser().getUid());
-            user.setFullName(body.getUser().getFullName());
-            user.setOriginalAppUserId(body.getUser().getOriginalAppUserId());
+            user = userRepository.findByOriginalAppUserId(body.getUser().getOriginalAppUserId());
+            if (user == null) {
+                user = new User();
+                user.setAppId("yuki");
+                user.setPushId(body.getUser().getPushId());
+                user.setEmail(body.getUser().getEmail());
+                user.setUid(body.getUser().getUid());
+                user.setFullName(body.getUser().getFullName());
+                user.setOriginalAppUserId(body.getUser().getOriginalAppUserId());
+            } {
+                user.setEmail(body.getUser().getEmail());
+                user.setUid(body.getUser().getUid());
+                user.setFullName(body.getUser().getFullName());
+            }
             userRepository.save(user);
         }
         YukiData yukiData = yukiRepository.findByUser(user);

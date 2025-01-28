@@ -10,6 +10,7 @@ import com.killiancorbel.realtimeapi.models.YukiData;
 import com.killiancorbel.realtimeapi.models.responses.YukiRes;
 import com.killiancorbel.realtimeapi.repositories.UserRepository;
 import com.killiancorbel.realtimeapi.repositories.YukiRepository;
+import com.killiancorbel.realtimeapi.services.PromptService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,8 @@ public class YukiController {
     private YukiRepository yukiRepository;
     @Value("${app.firebase-configuration-file}")
     private String firebaseConfigPath;
+    @Autowired
+    private PromptService promptService;
     private final Logger logger = LoggerFactory.getLogger(YukiController.class);
 
     public YukiController() {
@@ -70,7 +73,7 @@ public class YukiController {
                 throw new AccessDeniedException("Not authorized");
             }
             YukiRes ret = new YukiRes();
-            ret.setPrompt(getPromptFromModel(yukiData));
+            ret.setPrompt(promptService.getPrompt(yukiData));
             ret.setTokens(yukiData.getTokens());
             ret.setEmail(user.getEmail());
             ret.setFullName(user.getFullName());
@@ -112,7 +115,7 @@ public class YukiController {
         yukiData.setToCorrect(body.isToCorrect());
         yukiRepository.save(yukiData);
         YukiRes ret = new YukiRes();
-        ret.setPrompt(getPromptFromModel(yukiData));
+        ret.setPrompt(promptService.getPrompt(yukiData));
         ret.setTokens(yukiData.getTokens());
         ret.setEmail(user.getEmail());
         ret.setFullName(user.getFullName());
@@ -140,7 +143,7 @@ public class YukiController {
             yukiData.setToCorrect(body.isToCorrect());
             yukiRepository.save(yukiData);
             YukiRes ret = new YukiRes();
-            ret.setPrompt(getPromptFromModel(yukiData));
+            ret.setPrompt(promptService.getPrompt(yukiData));
             ret.setTokens(yukiData.getTokens());
             ret.setEmail(user.getEmail());
             ret.setFullName(user.getFullName());
@@ -192,7 +195,7 @@ public class YukiController {
             }
             yukiRepository.save(yukiData);
             YukiRes ret = new YukiRes();
-            ret.setPrompt(getPromptFromModel(yukiData));
+            ret.setPrompt(promptService.getPrompt(yukiData));
             ret.setTokens(yukiData.getTokens());
             ret.setEmail(user.getEmail());
             ret.setFullName(user.getFullName());
@@ -201,45 +204,5 @@ public class YukiController {
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }
-    }
-
-    public String getPromptFromModel(YukiData yukiData) {
-        // Début du prompt avec la langue sélectionnée
-        String prompt = "Your knowledge cutoff is 2024-10. You are a highly adaptable and engaging " + yukiData.getLanguage() + " teacher. ";
-
-        // Ajout des informations sur le niveau de l'étudiant avec des directives spécifiques pour chaque niveau
-        switch (yukiData.getLevel()) {
-            case 0: // Niveau A0
-                prompt += "Your student is at level A0 (absolute beginner). Use very simple words and short phrases. No complex grammar. Speak clearly. Suggested topics should include greetings, introductions, or basic objects. Repeat key words often. ";
-                break;
-            case 1: // Niveau A1
-                prompt += "Your student is at level A1 (beginner). Use simple sentences and basic vocabulary. Suggested topics can include ordering food, asking for directions, or describing preferences. Keep it practical. ";
-                break;
-            case 2: // Niveau B1
-                prompt += "Your student is at level B1 (intermediate). Use mostly " + yukiData.getLanguage() + " with structured dialogues. Suggested topics should include travel, hobbies, or daily routines. Encourage full sentences. ";
-                break;
-            case 3: // Niveau B2
-                prompt += "Your student is at level B2 (upper intermediate). Use natural conversation and introduce idioms. Suggested topics should include debates, cultural differences, or opinions on trends. Encourage fluency. ";
-                break;
-            default: // Niveau C1/C2
-                prompt += "Your student is at level C1/C2 (advanced/proficient). Focus on advanced vocabulary and subtle grammar. Suggested topics should include abstract ideas, professional scenarios, or cultural analysis. Keep it challenging. ";
-                break;
-        }
-
-        // Ton et style
-        prompt += "Your personality is friendly and dynamic. Use humor and enthusiasm. Adapt language and topics to the student's level. Keep responses short and to the point. Each answer should be thought not to be over 200 characters. Encourage speaking as much as possible. ";
-
-        // Introduction simplifiée avec suggestion de sujet aléatoire
-        prompt += "Start with: 'Hey! It's Yuki.' Then immediately suggest a random topic suitable for the student's level. For example, 'Let’s talk about your favorite food!' or 'What do you think about technology today?' If the student has another idea, follow their lead. ";
-
-        if (yukiData.isToCorrect()) {
-            // Correction
-            prompt += "Correct mistakes. For A0 and A1, prioritize practice over corrections. For B1 and above, provide short feedback like: 'Nice! Just say [correct version].' Keep corrections motivating and concise. ";
-        }
-
-        // Objectif
-        prompt += "Your goal is to keep the conversation engaging and natural while ensuring the student practices speaking effectively.";
-
-        return prompt;
     }
 }

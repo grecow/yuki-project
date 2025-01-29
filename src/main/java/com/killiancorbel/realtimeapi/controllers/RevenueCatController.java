@@ -44,7 +44,7 @@ public class RevenueCatController {
         switch (revenueCatReq.getEvent().getType()) {
             case "INITIAL_PURCHASE", "RENEWAL", "UNCANCELLATION":
                 yd.setPremium(true);
-                yd.setTokens(10000);
+                yd.setTokens(15000);
                 yukiRepository.save(yd);
                 break;
             case "EXPIRATION", "CANCELLATION":

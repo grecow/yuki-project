@@ -19,7 +19,7 @@ public class CronController {
 
         for (YukiData p : premiums) {
             if (p.isPremium()) {
-                p.setTokens(10000);
+                p.setTokens(15000);
                 yukiRepository.save(p);
             }
         }

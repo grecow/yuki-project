@@ -108,7 +108,7 @@ public class YukiController {
         if (yukiData == null) {
             yukiData = new YukiData();
             yukiData.setUser(user);
-            yukiData.setTokens(10000);
+            yukiData.setTokens(15000);
         }
         yukiData.setLevel(body.getLevel());
         yukiData.setLanguage(body.getLanguage());
@@ -191,7 +191,7 @@ public class YukiController {
             if (yukiData == null) {
                 yukiData = new YukiData();
                 yukiData.setUser(user);
-                yukiData.setTokens(10000);
+                yukiData.setTokens(15000);
             }
             yukiRepository.save(yukiData);
             YukiRes ret = new YukiRes();

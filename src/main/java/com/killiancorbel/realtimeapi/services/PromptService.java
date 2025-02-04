@@ -2,8 +2,8 @@ package com.killiancorbel.realtimeapi.services;
 
 import com.killiancorbel.realtimeapi.models.YukiData;
 
-import main.java.com.killiancorbel.realtimeapi.models.Topic;
-import main.java.com.killiancorbel.realtimeapi.services.TopicService;
+import com.killiancorbel.realtimeapi.models.Topic;
+import com.killiancorbel.realtimeapi.services.TopicService;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;

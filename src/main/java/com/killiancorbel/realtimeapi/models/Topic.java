@@ -1,5 +1,8 @@
 package com.killiancorbel.realtimeapi.models;
 
+import java.util.List;
+import java.util.Map;
+
 public class Topic {
     private Map<String, List<String>> levels;
 

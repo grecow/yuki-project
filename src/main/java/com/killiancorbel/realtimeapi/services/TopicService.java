@@ -17,5 +17,6 @@ public class TopicService {
         } catch (IOException e) {
             e.printStackTrace(); // Handle exception properly in production
         }
+        return null;
     }
 }

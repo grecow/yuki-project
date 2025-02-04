@@ -505,10 +505,6 @@ public class PromptService {
         return prompt;
     }
 
-    private void getEnglishTopics(int level) {
-        
-    }
-
     private String levelFromYukiData(int number) {
         switch (number) {
             case 0:
@@ -520,6 +516,5 @@ public class PromptService {
             default:
                 return "expert";
         }
-        return "beginner";
     }
 }

@@ -520,5 +520,6 @@ public class PromptService {
             default:
                 return "expert";
         }
+        return "beginner";
     }
 }

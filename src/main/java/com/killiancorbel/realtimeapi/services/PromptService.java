@@ -50,7 +50,7 @@ public class PromptService {
         }
     }
 
-    public String getPromptFromModel(YukiData yukiData, String topic) {
+    public String getEnglishPrompt(YukiData yukiData, String topic) {
         // Début du prompt avec le rôle de professeur d'anglais
         String prompt = "Your knowledge cutoff is 2024-10. You are a highly adaptable and engaging English teacher. ";
     

@@ -513,16 +513,12 @@ public class PromptService {
         switch (number) {
             case 0:
                 return "beginner";
-                break;
             case 1:
                 return "intermediate";
-                break;
             case 2:
                 return "advanced";
-                break;
             default:
                 return "expert";
-                break;
         }
     }
 }

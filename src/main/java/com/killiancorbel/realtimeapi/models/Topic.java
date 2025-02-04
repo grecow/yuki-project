@@ -1,4 +1,4 @@
-package main.java.com.killiancorbel.realtimeapi.models;
+package com.killiancorbel.realtimeapi.models;
 
 public class Topic {
     private Map<String, List<String>> levels;

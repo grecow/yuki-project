@@ -21,8 +21,7 @@ public class PromptService {
     public String getPrompt(YukiData yukiData) {
         if (Objects.equals(yukiData.getLanguage(), "French")) {
             Topic topic = topicService.loadTopics("fr");
-            Map<String, List<String>> levels = topic.getLevels();
-            List<String> topics = levels.getOrDefault(levelFromYukiData(yukiData.getLevel()), List.of());
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getFrenchPrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Spanish")) {
@@ -43,8 +42,7 @@ public class PromptService {
             return getChinesePrompt(yukiData);
         } else {
             Topic topic = topicService.loadTopics("en");
-            Map<String, List<String>> levels = topic.getLevels();
-            List<String> topics = levels.getOrDefault(levelFromYukiData(yukiData.getLevel()), List.of());
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getEnglishPrompt(yukiData, topics.get(randomIndex));
         }
@@ -505,16 +503,16 @@ public class PromptService {
         return prompt;
     }
 
-    private String levelFromYukiData(int number) {
+    private List<String> levelFromYukiData(int number, Topic topic) {
         switch (number) {
             case 0:
-                return "beginner";
+                return topic.getBeginner();
             case 1:
-                return "intermediate";
+                return topic.getIntermediate();
             case 2:
-                return "advanced";
+                return topic.getAdvanced();
             default:
-                return "expert";
+                return topic.getExpert();
         }
     }
 }

@@ -4,13 +4,33 @@ import java.util.List;
 import java.util.Map;
 
 public class Topic {
-    private Map<String, List<String>> levels;
+    private List<String> beginner;
+    private List<String> intermediate;
+    private List<String> advanced;
+    private List<String> expert;
 
-    public Map<String, List<String>> getLevels() {
-        return levels;
+    public List<String> getAdvanced() {
+        return advanced;
     }
-
-    public void setLevels(Map<String, List<String>> levels) {
-        this.levels = levels;
+    public List<String> getBeginner() {
+        return beginner;
+    }
+    public List<String> getExpert() {
+        return expert;
+    }
+    public List<String> getIntermediate() {
+        return intermediate;
+    }
+    public void setAdvanced(List<String> advanced) {
+        this.advanced = advanced;
+    }
+    public void setBeginner(List<String> beginner) {
+        this.beginner = beginner;
+    }
+    public void setExpert(List<String> expert) {
+        this.expert = expert;
+    }
+    public void setIntermediate(List<String> intermediate) {
+        this.intermediate = intermediate;
     }
 }

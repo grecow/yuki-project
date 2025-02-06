@@ -248,6 +248,7 @@ public class PromptService {
             case 1: // Niveau A2
                 prompt += "Votre élève est au niveau A2 (élémentaire). Utilisez des phrases simples et un vocabulaire accessible. "
                         + "Abordez des sujets pratiques et variés pour maintenir son intérêt. "
+                        + "Gardez vos réponses aussi courtes que possible (≤ 200 caractères)"
                         + "Les compétences officielles sont décomposées pour faciliter l'apprentissage. "
                         + "Un élève de niveau A2 pourra : "
                         + "évaluer la performance de collègues, raconter des événements passés, parler des moments importants de sa vie, "
@@ -259,6 +260,7 @@ public class PromptService {
             case 2: // Niveau B1
                 prompt += "Votre élève est au niveau B1 (intermédiaire). Utilisez principalement le français avec des dialogues structurés. "
                         + "Choisissez des sujets engageants et créatifs pour dynamiser l'apprentissage. "
+                        + "Gardez vos réponses aussi courtes que possible (≤ 200 caractères)"
                         + "Les compétences officielles sont détaillées pour mieux évaluer le niveau. "
                         + "Un élève de niveau B1 pourra : "
                         + "discuter de ses objectifs personnels et professionnels, passer un entretien d'embauche, "
@@ -271,6 +273,7 @@ public class PromptService {
             default: // Niveau B2
                 prompt += "Votre élève est au niveau B2 (intermédiaire avancé). Utilisez une conversation naturelle et introduisez des expressions idiomatiques. "
                         + "Choisissez des sujets créatifs et stimulants pour encourager la discussion et maintenir l'intérêt. "
+                        + "Gardez vos réponses aussi courtes que possible (≤ 200 caractères)"
                         + "Les compétences officielles sont détaillées pour affiner l'évaluation du niveau. "
                         + "Un élève de niveau B2 pourra : "
                         + "participer à des réunions dans son domaine, discuter des questions de genre dans la culture, "

@@ -604,7 +604,7 @@ public class PromptService {
         return prompt;
     }
 
-    private List < String > levelFromYukiData(int number, Topic topic) {
+    private List <String> levelFromYukiData(int number, Topic topic) {
         switch (number) {
             case 0:
                 return topic.getBeginner();

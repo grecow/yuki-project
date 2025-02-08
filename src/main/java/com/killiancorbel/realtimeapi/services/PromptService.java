@@ -242,56 +242,25 @@ public class PromptService {
                         + "Gardez vos réponses aussi courtes que possible (moins de 130 token). Priorisez la parole de l'élève. "
                         + "Adoptez une approche amicale, dynamique et humoristique, sans répéter trop souvent les mêmes sujets. "
                         + "Ne donnez pas d'exemples lorsque vous posez des questions. Laissez l'élève formuler ses propres réponses."
-                        + "Ne posez qu'une question a la fois"
-                        + "Au niveau A1, l'élève peut : se présenter et utiliser des salutations de base, "
-                        + "parler de son origine et de celle des autres, évoquer sa famille et ses collègues, "
-                        + "décrire des vêtements et poser des questions simples en magasin, "
-                        + "parler de ses plats préférés et commander à emporter, "
-                        + "décrire ses activités quotidiennes et organiser des rendez-vous, "
-                        + "parler de la météo et suggérer des activités, "
-                        + "décrire des symptômes médicaux courants, donner des indications, parler de loisirs, "
-                        + "gérer des situations simples à l'hôtel et faire des achats de base.";
+                        + "Ne posez qu'une question a la fois";
                 break;
             case 1: // Niveau A2
                 prompt += "Votre élève est au niveau A2 (élémentaire). Utilisez des phrases simples et un vocabulaire accessible. "
                         + "Abordez des sujets pratiques et variés pour maintenir son intérêt. "
                         + "Gardez vos réponses aussi courtes que possible (moins de 130 token)"
-                        + "Ne posez qu'une question a la fois"
-                        + "Les compétences officielles sont décomposées pour faciliter l'apprentissage. "
-                        + "Un élève de niveau A2 pourra : "
-                        + "évaluer la performance de collègues, raconter des événements passés, parler des moments importants de sa vie, "
-                        + "accueillir des invités ou rendre visite à un ami, discuter de projets de voyage, parler de la nature et des déplacements, "
-                        + "choisir un film avec des amis, discuter de ses préférences vestimentaires, interagir lors de réunions professionnelles, "
-                        + "décrire un accident ou une blessure et demander de l'aide, socialiser en contexte professionnel, "
-                        + "comprendre et proposer des idées en entreprise, expliquer les règles de jeux.";
+                        + "Ne posez qu'une question a la fois";
                 break;
             case 2: // Niveau B1
                 prompt += "Votre élève est au niveau B1 (intermédiaire). Utilisez principalement le français avec des dialogues structurés. "
                         + "Choisissez des sujets engageants et créatifs pour dynamiser l'apprentissage. "
                         + "Gardez vos réponses aussi courtes que possible (moins de 130 token)"
-                        + "Ne posez qu'une question a la fois"
-                        + "Les compétences officielles sont détaillées pour mieux évaluer le niveau. "
-                        + "Un élève de niveau B1 pourra : "
-                        + "discuter de ses objectifs personnels et professionnels, passer un entretien d'embauche, "
-                        + "parler de ses habitudes télévisuelles et de ses programmes préférés, décrire son parcours scolaire et ses projets de formation, "
-                        + "parler de ses goûts musicaux et organiser une sortie, discuter d'un mode de vie sain, "
-                        + "parler des relations et des rencontres, commander et payer un repas au restaurant, "
-                        + "négocier dans son domaine d'expertise, parler de la sécurité au travail et signaler un incident, "
-                        + "discuter des règles de politesse et répondre à un comportement impoli.";
+                        + "Ne posez qu'une question a la fois";
                 break;
             default: // Niveau B2
                 prompt += "Votre élève est au niveau B2 (intermédiaire avancé). Utilisez une conversation naturelle et introduisez des expressions idiomatiques. "
                         + "Choisissez des sujets créatifs et stimulants pour encourager la discussion et maintenir l'intérêt. "
                         + "Gardez vos réponses aussi courtes que possible (moins de 130 token)"
-                        + "Ne posez qu'une question a la fois"
-                        + "Les compétences officielles sont détaillées pour affiner l'évaluation du niveau. "
-                        + "Un élève de niveau B2 pourra : "
-                        + "participer à des réunions dans son domaine, discuter des questions de genre dans la culture, "
-                        + "parler de finances personnelles et donner des conseils à des amis, décrire son mode de vie et son équilibre travail-vie personnelle, "
-                        + "expliquer son parcours éducatif, son expérience et ses points forts et faibles, parler d'évolution de carrière, "
-                        + "discuter des processus mentaux pour améliorer l'efficacité professionnelle, recommander des livres et des lectures, "
-                        + "utiliser un langage approprié en société, parler des qualités de leadership et des leaders admirés, "
-                        + "gérer des situations sociales et professionnelles complexes, discuter de sujets politiques et des politiciens.";
+                        + "Ne posez qu'une question a la fois";
                 break;
         }
     

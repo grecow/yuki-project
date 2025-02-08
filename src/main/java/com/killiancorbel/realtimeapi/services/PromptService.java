@@ -21,52 +21,52 @@ public class PromptService {
     public String getPrompt(YukiData yukiData) {
         if (Objects.equals(yukiData.getLanguage(), "French")) {
             Topic topic = topicService.loadTopics("fr");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getFrenchPrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Spanish")) {
             Topic topic = topicService.loadTopics("es");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getSpannishPrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Russian")) {
             Topic topic = topicService.loadTopics("ru");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getRussianPrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Italian")) {
             Topic topic = topicService.loadTopics("it");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getItalianPrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("German")) {
             Topic topic = topicService.loadTopics("de");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getGermanPrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Portuguese")) {
             Topic topic = topicService.loadTopics("po");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getPortuguesePrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Japanese")) {
             Topic topic = topicService.loadTopics("jp");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getJapanesePrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Korean")) {
             Topic topic = topicService.loadTopics("kr");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getCoreanPrompt(yukiData, topics.get(randomIndex));
         } else if (yukiData.getLanguage().equals("Chinese")) {
             Topic topic = topicService.loadTopics("ch");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getChinesePrompt(yukiData, topics.get(randomIndex));
         } else {
             Topic topic = topicService.loadTopics("en");
-            List < String > topics = levelFromYukiData(yukiData.getLevel(), topic);
+            List<String> topics = levelFromYukiData(yukiData.getLevel(), topic);
             int randomIndex = ThreadLocalRandom.current().nextInt(topics.size());
             return getEnglishPrompt(yukiData, topics.get(randomIndex));
         }

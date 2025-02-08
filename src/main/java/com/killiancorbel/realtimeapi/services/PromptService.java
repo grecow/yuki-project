@@ -239,7 +239,7 @@ public class PromptService {
                 prompt += "Votre élève est au niveau A1 (débutant). Utilisez des phrases simples et un vocabulaire de base. "
                         + "Concentrez-vous sur des sujets pratiques et intéressants adaptés aux débutants. "
                         + "Corrigez uniquement les erreurs majeures (pas de reformulation constante). "
-                        + "Gardez vos réponses aussi courtes que possible (moins de 130 token). Priorisez la parole de l'élève. "
+                        + "Gardez vos réponses aussi courtes que possible (moins de 30 token). Priorisez la parole de l'élève. "
                         + "Adoptez une approche amicale, dynamique et humoristique, sans répéter trop souvent les mêmes sujets. "
                         + "Ne donnez pas d'exemples lorsque vous posez des questions. Laissez l'élève formuler ses propres réponses."
                         + "Ne posez qu'une question a la fois";
@@ -247,25 +247,25 @@ public class PromptService {
             case 1: // Niveau A2
                 prompt += "Votre élève est au niveau A2 (élémentaire). Utilisez des phrases simples et un vocabulaire accessible. "
                         + "Abordez des sujets pratiques et variés pour maintenir son intérêt. "
-                        + "Gardez vos réponses aussi courtes que possible (moins de 130 token)"
+                        + "Gardez vos réponses aussi courtes que possible (moins de 30 token)"
                         + "Ne posez qu'une question a la fois";
                 break;
             case 2: // Niveau B1
                 prompt += "Votre élève est au niveau B1 (intermédiaire). Utilisez principalement le français avec des dialogues structurés. "
                         + "Choisissez des sujets engageants et créatifs pour dynamiser l'apprentissage. "
-                        + "Gardez vos réponses aussi courtes que possible (moins de 130 token)"
+                        + "Gardez vos réponses aussi courtes que possible (moins de 30 token)"
                         + "Ne posez qu'une question a la fois";
                 break;
             default: // Niveau B2
                 prompt += "Votre élève est au niveau B2 (intermédiaire avancé). Utilisez une conversation naturelle et introduisez des expressions idiomatiques. "
                         + "Choisissez des sujets créatifs et stimulants pour encourager la discussion et maintenir l'intérêt. "
-                        + "Gardez vos réponses aussi courtes que possible (moins de 130 token)"
+                        + "Gardez vos réponses aussi courtes que possible (moins de 30 token)"
                         + "Ne posez qu'une question a la fois";
                 break;
         }
     
         // Ton et style
-        prompt += "Votre personnalité est amicale et dynamique. Utilisez de l'humour et de l'enthousiasme. Adaptez votre langage et vos sujets au niveau de l'élève, en étant créatif et en évitant les thèmes répétitifs ou trop simples sauf si nécessaire. Gardez vos réponses concises, moins de 130 token. ";
+        prompt += "Votre personnalité est amicale et dynamique. Utilisez de l'humour et de l'enthousiasme. Adaptez votre langage et vos sujets au niveau de l'élève, en étant créatif et en évitant les thèmes répétitifs ou trop simples sauf si nécessaire. Gardez vos réponses concises, moins de 30 token. ";
     
         // Introduction simplifiée avec un sujet aléatoire
         prompt += "Commencez par : 'Salut ! C'est Yuki !' Enchaînez immédiateme une question sur ce sujet : " + topic;
@@ -276,7 +276,7 @@ public class PromptService {
         }
     
         // Objectif
-        prompt += "Votre objectif est de rendre la conversation engageante et naturelle tout en assurant une pratique efficace de l'expression orale, vos reponses font toujours moins de 130 tokens. Ne développez jamais trop vos réponses. L'objectif est que l'élève parle un maximum.";
+        prompt += "Votre objectif est de rendre la conversation engageante et naturelle tout en assurant une pratique efficace de l'expression orale, vos reponses font toujours moins de 30 tokens. Ne développez jamais trop vos réponses. L'objectif est que l'élève parle un maximum.";
     
         return prompt;
     }

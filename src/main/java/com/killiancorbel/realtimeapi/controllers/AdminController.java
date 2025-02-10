@@ -22,7 +22,8 @@ public class AdminController {
     @GetMapping(value = "/users")
     @ResponseBody
     public List<YukiData> getAllUsers(@RequestHeader("Authorization") String authorizationHeader) {
-        if (!authorizationHeader.equals("sgp123")) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
             throw new AccessDeniedException("Forbidden");
         }
         List<YukiData> users = yukiRepository.findAll();
@@ -32,7 +33,8 @@ public class AdminController {
     @PostMapping(value = "/user/delete/{id}")
     @ResponseBody
     public ResponseEntity deleteUser(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Integer id) {
-        if (!authorizationHeader.equals("sgp123")) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
             throw new AccessDeniedException("Forbidden");
         }
         User u = userRepository.findById(id).get();
@@ -46,7 +48,8 @@ public class AdminController {
     @PostMapping(value =  "/yd/tokens")
     @ResponseBody
     public YukiData updateTokens(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData yukiDataReq) {
-        if (!authorizationHeader.equals("sgp123")) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
             throw new AccessDeniedException("Forbidden");
         }
         YukiData yd = yukiRepository.findById(yukiDataReq.getId().intValue()).get();

@@ -90,9 +90,11 @@ public class AdminController {
         l.setLesson_key(lessons.getLesson_key());
         l.setTitle(lessons.getTitle());
         l.setPublished(lessons.isPublished());
-        for (Question q : l.getQuestions()) {
-            if (!lessons.getQuestions().contains(q)) {
-                questionRepository.delete(q);
+        if (l.getQuestions() != null) {
+            for (Question q : l.getQuestions()) {
+                if (!lessons.getQuestions().contains(q)) {
+                    questionRepository.delete(q);
+                }
             }
         }
         for (Question q : lessons.getQuestions()) {

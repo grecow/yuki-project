@@ -14,6 +14,7 @@ public class Lesson {
     private String title;
     private String description;
     private String language;
+    private String image = null;
     @OneToMany
     private List<Question> questions;
 
@@ -63,5 +64,13 @@ public class Lesson {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

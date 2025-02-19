@@ -1,13 +1,7 @@
 package com.killiancorbel.realtimeapi.controllers;
 
-import com.killiancorbel.realtimeapi.models.Achievement;
-import com.killiancorbel.realtimeapi.models.Lesson;
-import com.killiancorbel.realtimeapi.models.User;
-import com.killiancorbel.realtimeapi.models.YukiData;
-import com.killiancorbel.realtimeapi.repositories.AchievementRepository;
-import com.killiancorbel.realtimeapi.repositories.LessonRepository;
-import com.killiancorbel.realtimeapi.repositories.UserRepository;
-import com.killiancorbel.realtimeapi.repositories.YukiRepository;
+import com.killiancorbel.realtimeapi.models.*;
+import com.killiancorbel.realtimeapi.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,6 +18,8 @@ public class AdminController {
     private YukiRepository yukiRepository;
     @Autowired
     private LessonRepository lessonRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
     @Autowired
     private AchievementRepository achievementRepository;
 
@@ -77,13 +73,41 @@ public class AdminController {
 
     @PostMapping(value = "/lessons/post")
     @ResponseBody
-    public ResponseEntity postLessons(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) List<Lesson> lessons) {
+    public ResponseEntity postLessons(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) Lesson lessons) {
         String token = authorizationHeader.replace("Bearer ", "");
         if (!token.equals("sgp123")) {
             throw new AccessDeniedException("Forbidden");
         }
-        lessonRepository.deleteAll();
-        lessonRepository.saveAll(lessons);
+        Lesson l;
+        if (lessons.getId() != null) {
+            l = lessonRepository.findById(lessons.getId().intValue()).get();
+        } else {
+            l = new Lesson();
+        }
+        l.setDescription(lessons.getDescription());
+        l.setLanguage(lessons.getLanguage());
+        l.setImage(lessons.getImage());
+        l.setLesson_key(lessons.getLesson_key());
+        l.setTitle(lessons.getTitle());
+        l.setPublished(lessons.isPublished());
+        for (Question q : l.getQuestions()) {
+            if (!lessons.getQuestions().contains(q)) {
+                questionRepository.delete(q);
+            }
+        }
+        for (Question q : lessons.getQuestions()) {
+            Question nq;
+            if (q.getId() != null) {
+                nq = questionRepository.findById(q.getId().intValue()).get();
+            } else {
+                nq = new Question();
+                l.addQuestion(nq);
+            }
+            nq.setHint(q.getHint());
+            nq.setQuestion(q.getQuestion());
+            questionRepository.save(nq);
+        }
+        lessonRepository.save(l);
         return ResponseEntity.ok("ok");
     }
 
@@ -128,6 +152,20 @@ public class AdminController {
         if (achievement.getId() != null) {
             Achievement a = achievementRepository.findById(achievement.getId().intValue()).get();
             achievementRepository.delete(a);
+        }
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping(value = "/lesson/delete")
+    @ResponseBody
+    public ResponseEntity deleteLesson(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) Lesson lesson) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
+            throw new AccessDeniedException("Forbidden");
+        }
+        if (lesson.getId() != null) {
+            Lesson l = lessonRepository.findById(lesson.getId().intValue()).get();
+            lessonRepository.delete(l);
         }
         return ResponseEntity.ok("ok");
     }

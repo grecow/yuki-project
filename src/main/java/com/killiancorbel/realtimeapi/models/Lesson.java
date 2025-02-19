@@ -15,6 +15,7 @@ public class Lesson {
     private String description;
     private String language;
     private String image = null;
+    private boolean published;
     @OneToMany
     private List<Question> questions;
 
@@ -50,6 +51,10 @@ public class Lesson {
         this.questions = questions;
     }
 
+    public void addQuestion(Question question) {
+        this.questions.add(question);
+    }
+
     public String getDescription() {
         return description;
     }
@@ -72,5 +77,13 @@ public class Lesson {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 }

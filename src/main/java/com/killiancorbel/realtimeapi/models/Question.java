@@ -26,4 +26,12 @@ public class Question {
     public void setHint(String hint) {
         this.hint = hint;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

@@ -91,11 +91,14 @@ public class AdminController {
         l.setTitle(lessons.getTitle());
         l.setPublished(lessons.isPublished());
         if (l.getQuestions() != null) {
-            for (Question q : l.getQuestions()) {
-                if (!lessons.getQuestions().contains(q)) {
+            l.getQuestions().removeIf(q -> {
+                boolean shouldRemove = lessons.getQuestions().stream()
+                        .noneMatch(obj -> obj.getId().equals(q.getId()));
+                if (shouldRemove) {
                     questionRepository.delete(q);
                 }
-            }
+                return shouldRemove;
+            });
         }
         for (Question q : lessons.getQuestions()) {
             Question nq;

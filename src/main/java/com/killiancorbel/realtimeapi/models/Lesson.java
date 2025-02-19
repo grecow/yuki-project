@@ -10,7 +10,7 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String key;
+    private String lesson_key;
     private String title;
     private String description;
     private String language;
@@ -58,12 +58,12 @@ public class Lesson {
         this.description = description;
     }
 
-    public String getKey() {
-        return key;
+    public String getLesson_key() {
+        return lesson_key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setLesson_key(String lesson_key) {
+        this.lesson_key = lesson_key;
     }
 
     public String getImage() {

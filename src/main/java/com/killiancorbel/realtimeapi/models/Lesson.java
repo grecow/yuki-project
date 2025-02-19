@@ -2,6 +2,7 @@ package com.killiancorbel.realtimeapi.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Lesson {
     private String image = null;
     private boolean published;
     @OneToMany
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
     public String getLanguage() {
         return language;
@@ -52,6 +53,9 @@ public class Lesson {
     }
 
     public void addQuestion(Question question) {
+        if (this.questions == null) {
+            this.questions = new ArrayList<>();
+        }
         this.questions.add(question);
     }
 

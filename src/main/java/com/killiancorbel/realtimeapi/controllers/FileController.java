@@ -28,11 +28,7 @@ public class FileController {
     }
 
     @GetMapping("/lesson/{uid}")
-    public ResponseEntity getLessonImage(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String uid) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        if (!token.equals("sgp123")) {
-            throw new AccessDeniedException("Forbidden");
-        }
+    public ResponseEntity getLessonImage(@PathVariable String uid) {
         try {
             byte[] imageData = storageService.downloadImage(uid, "lessons\\");
             return ResponseEntity.status(HttpStatus.OK)

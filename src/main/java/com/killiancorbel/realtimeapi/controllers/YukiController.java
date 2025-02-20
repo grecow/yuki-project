@@ -261,7 +261,7 @@ public class YukiController {
             yukiData.setSentences(body.getSentences());
             yukiData.setTimeStudied(body.getTimeStudied());
             if (!body.getLessonsDone().isEmpty()) {
-                yukiData.addLessonsDone(body.getLessonsDone().getFirst());
+                yukiData.addLessonsDone(body.getLessonsDone().get(0));
             }
             yukiRepository.save(yukiData);
             return ResponseEntity.ok("ok");

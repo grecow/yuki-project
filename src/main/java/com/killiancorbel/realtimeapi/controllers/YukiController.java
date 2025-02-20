@@ -225,7 +225,7 @@ public class YukiController {
                 throw new AccessDeniedException("no user");
             }
             YukiData yukiData = yukiRepository.findByUser(user);
-            return lessonRepository.findAllByLanguage(yukiData.getLanguage());
+            return lessonRepository.findAllByLanguageAndPublished(yukiData.getLanguage(), true);
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }

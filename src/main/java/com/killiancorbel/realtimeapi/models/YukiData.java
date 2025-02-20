@@ -2,6 +2,8 @@ package com.killiancorbel.realtimeapi.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table
 public class YukiData {
@@ -16,6 +18,14 @@ public class YukiData {
     private String language;
     private boolean toCorrect;
     private boolean premium = false;
+    @OneToMany
+    private List<LessonDone> lessonsDone;
+    @ManyToMany
+    private List<Achievement> achievements;
+    private int streak = 0;
+    private int timeStudied = 0;
+    private int sentences = 0;
+    private int vocabulary = 0;
 
     public Long getId() {
         return id;
@@ -81,5 +91,61 @@ public class YukiData {
 
     public void setPremium(boolean premium) {
         this.premium = premium;
+    }
+
+    public List<LessonDone> getLessonsDone() {
+        return lessonsDone;
+    }
+
+    public List<Achievement> getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(List<Achievement> achievements) {
+        this.achievements = achievements;
+    }
+
+    public void setLessonsDone(List<LessonDone> lessonsDone) {
+        this.lessonsDone = lessonsDone;
+    }
+
+    public void addAchievement(Achievement achievement) {
+        this.achievements.add(achievement);
+    }
+
+    public void addLessonsDone(LessonDone e) {
+        this.lessonsDone.add(e);
+    }
+
+    public int getSentences() {
+        return sentences;
+    }
+
+    public int getStreak() {
+        return streak;
+    }
+
+    public int getTimeStudied() {
+        return timeStudied;
+    }
+
+    public int getVocabulary() {
+        return vocabulary;
+    }
+
+    public void setSentences(int sentences) {
+        this.sentences = sentences;
+    }
+
+    public void setStreak(int streak) {
+        this.streak = streak;
+    }
+
+    public void setTimeStudied(int timeStudied) {
+        this.timeStudied = timeStudied;
+    }
+
+    public void setVocabulary(int vocabulary) {
+        this.vocabulary = vocabulary;
     }
 }

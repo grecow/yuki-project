@@ -11,7 +11,7 @@ public class LessonDone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int lesson_id;
-    private Date date;
+    private String date;
 
     public Long getId() {
         return id;
@@ -21,11 +21,11 @@ public class LessonDone {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

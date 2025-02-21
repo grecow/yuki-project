@@ -1,6 +1,10 @@
 package com.killiancorbel.realtimeapi.models.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.killiancorbel.realtimeapi.models.Achievement;
+import com.killiancorbel.realtimeapi.models.LessonDone;
+
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class YukiRes {
@@ -9,6 +13,14 @@ public class YukiRes {
     private String email;
     private String fullName;
     private boolean premium;
+    private int streak;
+    private int maxStreak;
+    private int timeStudied;
+    private int sentences;
+    private int vocabulary;
+    private boolean doneToday;
+    private List<Achievement> achievements;
+    private List<LessonDone> lessonsDone;
 
     public int getTokens() {
         return tokens;
@@ -48,5 +60,69 @@ public class YukiRes {
 
     public void setPremium(boolean premium) {
         this.premium = premium;
+    }
+
+    public int getMaxStreak() {
+        return maxStreak;
+    }
+
+    public int getTimeStudied() {
+        return timeStudied;
+    }
+
+    public int getVocabulary() {
+        return vocabulary;
+    }
+
+    public int getSentences() {
+        return sentences;
+    }
+
+    public int getStreak() {
+        return streak;
+    }
+
+    public void setDoneToday(boolean doneToday) {
+        this.doneToday = doneToday;
+    }
+
+    public void setMaxStreak(int maxStreak) {
+        this.maxStreak = maxStreak;
+    }
+
+    public void setTimeStudied(int timeStudied) {
+        this.timeStudied = timeStudied;
+    }
+
+    public void setVocabulary(int vocabulary) {
+        this.vocabulary = vocabulary;
+    }
+
+    public void setSentences(int sentences) {
+        this.sentences = sentences;
+    }
+
+    public void setStreak(int streak) {
+        this.streak = streak;
+    }
+
+    public boolean isDoneToday() {
+        return doneToday;
+    }
+
+    public List<LessonDone> getLessonsDone() {
+        return lessonsDone;
+    }
+
+    public List<Achievement> getAchievements() {
+        return achievements;
+    }
+
+    public void setLessonsDone(List<LessonDone> lessonsDone) {
+        this.lessonsDone = lessonsDone;
+    }
+
+    public void setAchievements(List<Achievement> achievements) {
+        this.achievements = achievements;
     }
 }

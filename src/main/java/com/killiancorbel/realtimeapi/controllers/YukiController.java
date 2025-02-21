@@ -83,6 +83,14 @@ public class YukiController {
             ret.setEmail(user.getEmail());
             ret.setFullName(user.getFullName());
             ret.setPremium(yukiData.isPremium());
+            ret.setStreak(yukiData.getStreak());
+            ret.setMaxStreak(yukiData.getMaxStreak());
+            ret.setTimeStudied(yukiData.getTimeStudied());
+            ret.setSentences(yukiData.getSentences());
+            ret.setVocabulary(yukiData.getVocabulary());
+            ret.setDoneToday(yukiData.isDoneToday());
+            ret.setAchievements(yukiData.getAchievements());
+            ret.setLessonsDone(yukiData.getLessonsDone());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");

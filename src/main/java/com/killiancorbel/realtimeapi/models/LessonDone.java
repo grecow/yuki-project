@@ -2,8 +2,6 @@ package com.killiancorbel.realtimeapi.models;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
-
 @Entity
 @Table
 public class LessonDone {

@@ -272,6 +272,7 @@ public class YukiController {
             yukiRepository.save(yukiData);
             return ResponseEntity.ok("ok");
         } catch (Exception e) {
+            logger.info(e.getMessage());
             throw new AccessDeniedException("Not authorized");
         }
     }

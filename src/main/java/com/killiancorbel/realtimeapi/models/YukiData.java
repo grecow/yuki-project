@@ -23,9 +23,11 @@ public class YukiData {
     @ManyToMany
     private List<Achievement> achievements;
     private int streak = 0;
+    private int maxStreak = 0;
     private int timeStudied = 0;
     private int sentences = 0;
     private int vocabulary = 0;
+    private boolean doneToday = false;
 
     public Long getId() {
         return id;
@@ -147,5 +149,21 @@ public class YukiData {
 
     public void setVocabulary(int vocabulary) {
         this.vocabulary = vocabulary;
+    }
+
+    public int getMaxStreak() {
+        return maxStreak;
+    }
+
+    public boolean isDoneToday() {
+        return doneToday;
+    }
+
+    public void setDoneToday(boolean doneToday) {
+        this.doneToday = doneToday;
+    }
+
+    public void setMaxStreak(int maxStreak) {
+        this.maxStreak = maxStreak;
     }
 }

@@ -18,10 +18,14 @@ public class CronController {
         List<YukiData> premiums = yukiRepository.findAll();
 
         for (YukiData p : premiums) {
+            if (!p.isDoneToday()) {
+                p.setStreak(0);
+            }
+            p.setDoneToday(false);
             if (p.isPremium()) {
                 p.setTokens(15000);
-                yukiRepository.save(p);
             }
+            yukiRepository.save(p);
         }
     }
 }

@@ -256,11 +256,17 @@ public class YukiController {
                 throw new AccessDeniedException("no user");
             }
             YukiData yukiData = yukiRepository.findByUser(user);
-            yukiData.setStreak(body.getStreak());
             yukiData.setVocabulary(body.getVocabulary());
             yukiData.setSentences(body.getSentences());
             yukiData.setTimeStudied(body.getTimeStudied());
             if (!body.getLessonsDone().isEmpty()) {
+                if (!yukiData.isDoneToday()) {
+                    yukiData.setStreak(yukiData.getStreak() + 1);
+                    if (yukiData.getStreak() > yukiData.getMaxStreak()) {
+                        yukiData.setMaxStreak(yukiData.getStreak());
+                    }
+                }
+                yukiData.setDoneToday(true);
                 yukiData.addLessonsDone(body.getLessonsDone().get(0));
             }
             yukiRepository.save(yukiData);

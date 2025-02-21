@@ -5,15 +5,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
-import com.killiancorbel.realtimeapi.models.Achievement;
-import com.killiancorbel.realtimeapi.models.Lesson;
-import com.killiancorbel.realtimeapi.models.User;
-import com.killiancorbel.realtimeapi.models.YukiData;
+import com.killiancorbel.realtimeapi.models.*;
 import com.killiancorbel.realtimeapi.models.responses.YukiRes;
-import com.killiancorbel.realtimeapi.repositories.AchievementRepository;
-import com.killiancorbel.realtimeapi.repositories.LessonRepository;
-import com.killiancorbel.realtimeapi.repositories.UserRepository;
-import com.killiancorbel.realtimeapi.repositories.YukiRepository;
+import com.killiancorbel.realtimeapi.repositories.*;
 import com.killiancorbel.realtimeapi.services.PromptService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -37,6 +31,8 @@ public class YukiController {
     private YukiRepository yukiRepository;
     @Autowired
     private LessonRepository lessonRepository;
+    @Autowired
+    private LessonDoneRepository lessonDoneRepository;
     @Autowired
     private AchievementRepository achievementRepository;
     @Value("${app.firebase-configuration-file}")
@@ -267,7 +263,11 @@ public class YukiController {
                     }
                 }
                 yukiData.setDoneToday(true);
-                yukiData.addLessonsDone(body.getLessonsDone().get(0));
+                LessonDone d = new LessonDone();
+                d.setLesson_id(body.getLessonsDone().get(0).getLesson_id());
+                d.setDate(body.getLessonsDone().get(0).getDate());
+                lessonDoneRepository.save(d);
+                yukiData.addLessonsDone(d);
             }
             yukiRepository.save(yukiData);
             return ResponseEntity.ok("ok");

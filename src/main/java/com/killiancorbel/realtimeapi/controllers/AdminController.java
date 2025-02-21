@@ -19,8 +19,6 @@ public class AdminController {
     @Autowired
     private LessonRepository lessonRepository;
     @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
     private AchievementRepository achievementRepository;
 
     @GetMapping(value = "/users")
@@ -90,28 +88,7 @@ public class AdminController {
         l.setLesson_key(lessons.getLesson_key());
         l.setTitle(lessons.getTitle());
         l.setPublished(lessons.isPublished());
-        if (l.getQuestions() != null) {
-            l.getQuestions().removeIf(q -> {
-                boolean shouldRemove = lessons.getQuestions().stream()
-                        .noneMatch(obj -> obj.getId().equals(q.getId()));
-                if (shouldRemove) {
-                    questionRepository.delete(q);
-                }
-                return shouldRemove;
-            });
-        }
-        for (Question q : lessons.getQuestions()) {
-            Question nq;
-            if (q.getId() != null) {
-                nq = questionRepository.findById(q.getId().intValue()).get();
-            } else {
-                nq = new Question();
-                l.addQuestion(nq);
-            }
-            nq.setHint(q.getHint());
-            nq.setQuestion(q.getQuestion());
-            questionRepository.save(nq);
-        }
+        l.setPrompt(lessons.getPrompt());
         lessonRepository.save(l);
         return ResponseEntity.ok("ok");
     }

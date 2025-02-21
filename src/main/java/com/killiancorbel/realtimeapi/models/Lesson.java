@@ -2,9 +2,6 @@ package com.killiancorbel.realtimeapi.models;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table
 public class Lesson {
@@ -17,8 +14,7 @@ public class Lesson {
     private String language;
     private String image = null;
     private boolean published;
-    @OneToMany
-    private List<Question> questions = new ArrayList<>();
+    private String prompt;
 
     public String getLanguage() {
         return language;
@@ -44,19 +40,12 @@ public class Lesson {
         this.title = title;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
+    public String getPrompt() {
+        return prompt;
     }
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
-
-    public void addQuestion(Question question) {
-        if (this.questions == null) {
-            this.questions = new ArrayList<>();
-        }
-        this.questions.add(question);
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
     }
 
     public String getDescription() {

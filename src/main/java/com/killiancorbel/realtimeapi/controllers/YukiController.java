@@ -257,8 +257,8 @@ public class YukiController {
             }
             YukiData yukiData = yukiRepository.findByUser(user);
             yukiData.setVocabulary(body.getVocabulary());
-            yukiData.setSentences(body.getSentences());
-            yukiData.setTimeStudied(body.getTimeStudied());
+            yukiData.setSentences(body.getSentences() + yukiData.getSentences());
+            yukiData.setTimeStudied(body.getTimeStudied() + yukiData.getTimeStudied());
             if (!body.getLessonsDone().isEmpty()) {
                 if (!yukiData.isDoneToday()) {
                     yukiData.setStreak(yukiData.getStreak() + 1);

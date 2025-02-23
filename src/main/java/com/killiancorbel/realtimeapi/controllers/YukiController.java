@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.killiancorbel.realtimeapi.models.*;
+import com.killiancorbel.realtimeapi.models.responses.PlaygroundRes;
 import com.killiancorbel.realtimeapi.models.responses.YukiRes;
 import com.killiancorbel.realtimeapi.repositories.*;
 import com.killiancorbel.realtimeapi.services.PromptService;
@@ -279,6 +280,25 @@ public class YukiController {
             }
             yukiRepository.save(yukiData);
             return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
+
+    @GetMapping("/playground")
+    public @ResponseBody PlaygroundRes getPlaygroundPrompt(@RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByUid(decodedToken.getUid());
+            if (user == null) {
+                throw new AccessDeniedException("no user");
+            }
+            YukiData yukiData = yukiRepository.findByUser(user);
+            PlaygroundRes res = new PlaygroundRes();
+            res.setPrompt(promptService.getPlaygroundPrompt(yukiData));
+            return res;
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new AccessDeniedException("Not authorized");

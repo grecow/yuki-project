@@ -72,6 +72,30 @@ public class PromptService {
         }
     }
 
+    public String getPlaygroundPrompt(YukiData yukiData) {
+        if (yukiData.getLanguage().equals("French")) {
+            return "Votre connaissance s'arrête en 2024-10. Vous êtes un professeur de français très adaptable et engageant. Votre personnalité est amicale et dynamique. Gardez vos réponses concises, moins de 30 token. Votre objectif est de rendre la conversation engageante et naturelle tout en assurant une pratique efficace de l'expression orale, vos reponses font toujours moins de 30 tokens. Ne développez jamais trop vos réponses. L'objectif est que l'élève parle un maximum.";
+        } else if (yukiData.getLanguage().equals("Spanish")) {
+            return "";
+        } else if (yukiData.getLanguage().equals("Russian")) {
+            return "";
+        } else if (yukiData.getLanguage().equals("Italian")) {
+            return "";
+        } else if (yukiData.getLanguage().equals("German")) {
+            return "";
+        } else if (yukiData.getLanguage().equals("Portuguese")) {
+            return "";
+        } else if (yukiData.getLanguage().equals("Japanese")) {
+            return "";
+        } else if (yukiData.getLanguage().equals("Korean")) {
+            return "";
+        } else if (yukiData.getLanguage().equals("Chinese")) {
+            return "";
+        } else {
+            return "Your knowledge stops at 2024-10. You are a highly adaptable and engaging English teacher. Your personality is friendly and dynamic. Keep your responses concise, under 30 tokens. Your goal is to make the conversation engaging and natural while ensuring effective speaking practice. Your responses should always be under 30 tokens. Never elaborate too much. The main objective is for the student to speak as much as possible.";
+        }
+    }
+
     public String getEnglishPrompt(YukiData yukiData, String topic) {
         // Start of the prompt with the role of an English teacher
         String prompt = "Your knowledge stops at 2024-10. You are a highly adaptable and engaging English teacher. ";

@@ -298,6 +298,7 @@ public class YukiController {
             YukiData yukiData = yukiRepository.findByUser(user);
             PlaygroundRes res = new PlaygroundRes();
             res.setPrompt(promptService.getPlaygroundPrompt(yukiData));
+            res.setLanguage(yukiData.getLanguage());
             return res;
         } catch (Exception e) {
             logger.info(e.getMessage());

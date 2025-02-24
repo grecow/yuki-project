@@ -18,6 +18,7 @@ public class YukiRes {
     private int timeStudied;
     private int sentences;
     private int vocabulary;
+    private String language;
     private boolean doneToday;
     private List<Achievement> achievements;
     private List<LessonDone> lessonsDone;
@@ -124,5 +125,13 @@ public class YukiRes {
 
     public void setAchievements(List<Achievement> achievements) {
         this.achievements = achievements;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

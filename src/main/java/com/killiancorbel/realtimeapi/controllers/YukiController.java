@@ -91,6 +91,7 @@ public class YukiController {
             ret.setVocabulary(yukiData.getVocabulary());
             ret.setDoneToday(yukiData.isDoneToday());
             ret.setAchievements(yukiData.getAchievements());
+            ret.setLanguage(yukiData.getLanguage());
             ret.setLessonsDone(yukiData.getLessonsDone());
             return ret;
         } catch (Exception e) {
@@ -302,6 +303,24 @@ public class YukiController {
             return res;
         } catch (Exception e) {
             logger.info(e.getMessage());
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
+
+    @PostMapping("/language/update")
+    public @ResponseBody ResponseEntity updateLanguage(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData body) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByUid(decodedToken.getUid());
+            if (user == null) {
+                throw new AccessDeniedException("no user");
+            }
+            YukiData yukiData = yukiRepository.findByUser(user);
+            yukiData.setLanguage(body.getLanguage());
+            yukiRepository.save(yukiData);
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }
     }

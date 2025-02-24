@@ -93,6 +93,7 @@ public class YukiController {
             ret.setAchievements(yukiData.getAchievements());
             ret.setLanguage(yukiData.getLanguage());
             ret.setLessonsDone(yukiData.getLessonsDone());
+            ret.setNotifications(yukiData.isNotifications());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
@@ -318,6 +319,24 @@ public class YukiController {
             }
             YukiData yukiData = yukiRepository.findByUser(user);
             yukiData.setLanguage(body.getLanguage());
+            yukiRepository.save(yukiData);
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
+
+    @PostMapping("/notifications")
+    public @ResponseBody ResponseEntity updateNotifications(@RequestHeader("Authorization") String authorizationHeader, @RequestBody(required = false) YukiData body) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByUid(decodedToken.getUid());
+            if (user == null) {
+                throw new AccessDeniedException("no user");
+            }
+            YukiData yukiData = yukiRepository.findByUser(user);
+            yukiData.setNotifications(body.isNotifications());
             yukiRepository.save(yukiData);
             return ResponseEntity.ok("ok");
         } catch (Exception e) {

@@ -28,6 +28,7 @@ public class YukiData {
     private int sentences = 0;
     private int vocabulary = 0;
     private boolean doneToday = false;
+    private boolean notifications;
 
     public Long getId() {
         return id;
@@ -165,5 +166,13 @@ public class YukiData {
 
     public void setMaxStreak(int maxStreak) {
         this.maxStreak = maxStreak;
+    }
+
+    public boolean isNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(boolean notifications) {
+        this.notifications = notifications;
     }
 }

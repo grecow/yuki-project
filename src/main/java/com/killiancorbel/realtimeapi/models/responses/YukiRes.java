@@ -22,6 +22,7 @@ public class YukiRes {
     private boolean doneToday;
     private List<Achievement> achievements;
     private List<LessonDone> lessonsDone;
+    private boolean notifications;
 
     public int getTokens() {
         return tokens;
@@ -133,5 +134,13 @@ public class YukiRes {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public boolean isNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(boolean notifications) {
+        this.notifications = notifications;
     }
 }

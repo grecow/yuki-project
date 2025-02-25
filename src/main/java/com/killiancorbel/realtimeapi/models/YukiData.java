@@ -18,7 +18,7 @@ public class YukiData {
     private String language;
     private boolean toCorrect;
     private boolean premium = false;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LessonDone> lessonsDone;
     @ManyToMany
     private List<Achievement> achievements;

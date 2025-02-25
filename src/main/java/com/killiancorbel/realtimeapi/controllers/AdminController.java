@@ -163,8 +163,7 @@ public class AdminController {
             throw new AccessDeniedException("Forbidden");
         }
         YukiData yd = yukiRepository.findById(id).get();
-        lessonDoneRepository.deleteAll(yd.getLessonsDone());
-        yd.setLessonsDone(new ArrayList<>());
+        yd.getLessonsDone().clear();
         yukiRepository.save(yd);
         return ResponseEntity.ok("ok");
     }

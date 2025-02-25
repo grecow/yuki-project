@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,6 +19,8 @@ public class AdminController {
     private YukiRepository yukiRepository;
     @Autowired
     private LessonRepository lessonRepository;
+    @Autowired
+    private LessonDoneRepository lessonDoneRepository;
     @Autowired
     private AchievementRepository achievementRepository;
 
@@ -149,6 +152,46 @@ public class AdminController {
             Lesson l = lessonRepository.findById(lesson.getId().intValue()).get();
             lessonRepository.delete(l);
         }
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping(value = "/reset-lessons/{id}")
+    @ResponseBody
+    public ResponseEntity resetLessons(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Integer id) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
+            throw new AccessDeniedException("Forbidden");
+        }
+        YukiData yd = yukiRepository.findById(id).get();
+        lessonDoneRepository.deleteAll(yd.getLessonsDone());
+        yd.setLessonsDone(new ArrayList<>());
+        yukiRepository.save(yd);
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping(value = "/done-today/{id}/{value}")
+    @ResponseBody
+    public ResponseEntity doneToday(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Integer id, @PathVariable Boolean value) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
+            throw new AccessDeniedException("Forbidden");
+        }
+        YukiData yd = yukiRepository.findById(id).get();
+        yd.setDoneToday(value);
+        yukiRepository.save(yd);
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping(value = "/premium/{id}/{value}")
+    @ResponseBody
+    public ResponseEntity premium(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Integer id, @PathVariable Boolean value) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
+            throw new AccessDeniedException("Forbidden");
+        }
+        YukiData yd = yukiRepository.findById(id).get();
+        yd.setPremium(value);
+        yukiRepository.save(yd);
         return ResponseEntity.ok("ok");
     }
 }

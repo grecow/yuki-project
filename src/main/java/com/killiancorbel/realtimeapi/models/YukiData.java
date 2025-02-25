@@ -28,7 +28,7 @@ public class YukiData {
     private int sentences = 0;
     private int vocabulary = 0;
     private boolean doneToday = false;
-    private boolean notifications;
+    private boolean notifications = false;
 
     public Long getId() {
         return id;

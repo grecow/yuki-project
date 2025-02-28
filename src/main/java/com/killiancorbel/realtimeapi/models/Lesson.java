@@ -14,6 +14,7 @@ public class Lesson {
     private String language;
     private String image = null;
     private boolean published;
+    @Column(columnDefinition="TEXT")
     private String prompt;
 
     public String getLanguage() {

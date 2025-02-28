@@ -343,4 +343,22 @@ public class YukiController {
             throw new AccessDeniedException("Not authorized");
         }
     }
+
+    @PostMapping("/update/push/{id}")
+    public @ResponseBody ResponseEntity updateNotifications(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String id) {
+
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByUid(decodedToken.getUid());
+            if (user == null) {
+                throw new AccessDeniedException("no user");
+            }
+            user.setPushId(id);
+            userRepository.save(user);
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
 }

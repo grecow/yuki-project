@@ -16,6 +16,8 @@ public class AdminController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private StatRepository statRepository;
+    @Autowired
     private YukiRepository yukiRepository;
     @Autowired
     private LessonRepository lessonRepository;
@@ -192,5 +194,15 @@ public class AdminController {
         yd.setPremium(value);
         yukiRepository.save(yd);
         return ResponseEntity.ok("ok");
+    }
+
+    @GetMapping(value = "/stats")
+    @ResponseBody
+    public List<Stat> getStats(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (!token.equals("sgp123")) {
+            throw new AccessDeniedException("Forbidden");
+        }
+        return statRepository.findAll();
     }
 }

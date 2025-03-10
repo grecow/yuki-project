@@ -4,6 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.killiancorbel.realtimeapi.models.*;
 import com.killiancorbel.realtimeapi.models.responses.PlaygroundRes;
@@ -360,5 +361,25 @@ public class YukiController {
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }
+    }
+
+    @PostMapping(value = "/delete")
+    @ResponseBody
+    public ResponseEntity deleteUser(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        FirebaseToken decodedToken;
+        try {
+            decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+        } catch (FirebaseAuthException e) {
+            throw new AccessDeniedException("Not authorized");
+        }
+        User user = userRepository.findByUid(decodedToken.getUid());
+        if (user == null) {
+            throw new AccessDeniedException("no user");
+        }
+        YukiData yd = yukiRepository.findByUser(user);
+        yukiRepository.delete(yd);
+        userRepository.delete(user);
+        return ResponseEntity.ok("ok");
     }
 }

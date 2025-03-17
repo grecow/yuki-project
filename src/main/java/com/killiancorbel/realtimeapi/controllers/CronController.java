@@ -30,16 +30,19 @@ public class CronController {
         int doneTodays = 0;
 
         for (YukiData p : premiums) {
-            if (!p.isDoneToday()) {
-                p.setStreak(0);
-            } else {
-                doneTodays = doneTodays + 1;
+            if (p.getLessonsDone() != null && p.getLessonsDone().size() < 9) {
+                if (!p.isDoneToday()) {
+                    p.setStreak(0);
+                } else {
+                    doneTodays = doneTodays + 1;
+                }
+                p.setDoneToday(false);
+                yukiRepository.save(p);
             }
-            p.setDoneToday(false);
             if (p.isPremium()) {
                 p.setTokens(15000);
+                yukiRepository.save(p);
             }
-            yukiRepository.save(p);
         }
         Stat stat = new Stat();
         stat.setDate(new Date().toString());

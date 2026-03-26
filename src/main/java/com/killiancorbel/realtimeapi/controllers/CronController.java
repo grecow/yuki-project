@@ -43,7 +43,8 @@ public class CronController {
                 doneTodays++;
             }
             yd.setDoneToday(false);
-            if (yd.isPremium()) {
+            yd.setDailyConversationsUsed(0);
+            if (yd.isPremium() || yd.isInTrial()) {
                 yd.setTokens(15000);
             }
             yukiRepository.save(yd);

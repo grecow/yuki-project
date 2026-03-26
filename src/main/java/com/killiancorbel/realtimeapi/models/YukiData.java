@@ -30,6 +30,11 @@ public class YukiData {
     private boolean doneToday = false;
     private boolean notifications = false;
     private int xp = 0;
+    private boolean discoveryDone = false;
+    private java.time.LocalDateTime trialStartDate;
+    private java.time.LocalDateTime trialEndDate;
+    private int dailyConversationsUsed = 0;
+    private int totalConversations = 0;
 
     public Long getId() {
         return id;
@@ -187,6 +192,42 @@ public class YukiData {
 
     public void addXp(int amount) {
         this.xp += amount;
+    }
+
+    public boolean isDiscoveryDone() { return discoveryDone; }
+    public void setDiscoveryDone(boolean discoveryDone) { this.discoveryDone = discoveryDone; }
+
+    public java.time.LocalDateTime getTrialStartDate() { return trialStartDate; }
+    public void setTrialStartDate(java.time.LocalDateTime trialStartDate) { this.trialStartDate = trialStartDate; }
+
+    public java.time.LocalDateTime getTrialEndDate() { return trialEndDate; }
+    public void setTrialEndDate(java.time.LocalDateTime trialEndDate) { this.trialEndDate = trialEndDate; }
+
+    public int getDailyConversationsUsed() { return dailyConversationsUsed; }
+    public void setDailyConversationsUsed(int dailyConversationsUsed) { this.dailyConversationsUsed = dailyConversationsUsed; }
+
+    public int getTotalConversations() { return totalConversations; }
+    public void setTotalConversations(int totalConversations) { this.totalConversations = totalConversations; }
+
+    public boolean isInTrial() {
+        if (trialStartDate == null || trialEndDate == null) return false;
+        var now = java.time.LocalDateTime.now();
+        return now.isAfter(trialStartDate) && now.isBefore(trialEndDate);
+    }
+
+    public int getTrialDaysLeft() {
+        if (trialEndDate == null) return 0;
+        long days = java.time.Duration.between(java.time.LocalDateTime.now(), trialEndDate).toDays();
+        return Math.max(0, (int) days);
+    }
+
+    /**
+     * Can the user start a conversation right now?
+     * Premium/trial = unlimited. Free = 1/day.
+     */
+    public boolean canStartConversation() {
+        if (premium || isInTrial()) return true;
+        return dailyConversationsUsed < 1;
     }
 
     /**

@@ -99,7 +99,65 @@ public class YukiController {
             ret.setUserLevel(yukiData.getCalculatedLevel());
             ret.setXpForNextLevel(yukiData.getXpForNextLevel());
             ret.setGoal(yukiData.getGoal());
+            ret.setDiscoveryDone(yukiData.isDiscoveryDone());
+            ret.setInTrial(yukiData.isInTrial());
+            ret.setTrialDaysLeft(yukiData.getTrialDaysLeft());
+            ret.setCanStartConversation(yukiData.canStartConversation());
+            ret.setCorrectionsEnabled(yukiData.isPremium() || yukiData.isInTrial());
+            ret.setTotalConversations(yukiData.getTotalConversations());
             return ret;
+        } catch (Exception e) {
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
+
+    @PostMapping("/discovery/complete")
+    public @ResponseBody ResponseEntity<java.util.Map<String, Object>> completeDiscovery(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody(required = false) java.util.Map<String, Object> body) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByUid(decodedToken.getUid());
+            if (user == null) throw new AccessDeniedException("no user");
+            YukiData yukiData = yukiRepository.findByUser(user);
+            yukiData.setDiscoveryDone(true);
+            // Award XP for discovery lesson
+            int wordsLearned = (int) body.getOrDefault("wordsLearned", 8);
+            int phrasesLearned = (int) body.getOrDefault("phrasesLearned", 3);
+            int xpGained = wordsLearned * 2 + phrasesLearned * 10;
+            yukiData.addXp(xpGained);
+            yukiRepository.save(yukiData);
+            return ResponseEntity.ok(java.util.Map.of(
+                "xpGained", xpGained,
+                "wordsLearned", wordsLearned,
+                "phrasesLearned", phrasesLearned
+            ));
+        } catch (Exception e) {
+            throw new AccessDeniedException("Not authorized");
+        }
+    }
+
+    @PostMapping("/trial/start")
+    public @ResponseBody ResponseEntity<java.util.Map<String, Object>> startTrial(
+            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            User user = userRepository.findByUid(decodedToken.getUid());
+            if (user == null) throw new AccessDeniedException("no user");
+            YukiData yukiData = yukiRepository.findByUser(user);
+            if (yukiData.isPremium()) {
+                return ResponseEntity.ok(java.util.Map.of("status", "already_premium"));
+            }
+            if (yukiData.getTrialStartDate() != null) {
+                return ResponseEntity.ok(java.util.Map.of("status", "already_trialed", "daysLeft", yukiData.getTrialDaysLeft()));
+            }
+            yukiData.setTrialStartDate(java.time.LocalDateTime.now());
+            yukiData.setTrialEndDate(java.time.LocalDateTime.now().plusDays(7));
+            yukiData.setTokens(15000);
+            yukiRepository.save(yukiData);
+            return ResponseEntity.ok(java.util.Map.of("status", "trial_started", "daysLeft", 7));
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }

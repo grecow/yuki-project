@@ -27,6 +27,12 @@ public class YukiRes {
     private int userLevel;
     private int xpForNextLevel;
     private int goal;
+    private boolean discoveryDone;
+    private boolean inTrial;
+    private int trialDaysLeft;
+    private boolean canStartConversation;
+    private boolean correctionsEnabled;
+    private int totalConversations;
 
     public int getTokens() {
         return tokens;
@@ -179,4 +185,22 @@ public class YukiRes {
     public void setGoal(int goal) {
         this.goal = goal;
     }
+
+    public boolean isDiscoveryDone() { return discoveryDone; }
+    public void setDiscoveryDone(boolean discoveryDone) { this.discoveryDone = discoveryDone; }
+
+    public boolean isInTrial() { return inTrial; }
+    public void setInTrial(boolean inTrial) { this.inTrial = inTrial; }
+
+    public int getTrialDaysLeft() { return trialDaysLeft; }
+    public void setTrialDaysLeft(int trialDaysLeft) { this.trialDaysLeft = trialDaysLeft; }
+
+    public boolean isCanStartConversation() { return canStartConversation; }
+    public void setCanStartConversation(boolean canStartConversation) { this.canStartConversation = canStartConversation; }
+
+    public boolean isCorrectionsEnabled() { return correctionsEnabled; }
+    public void setCorrectionsEnabled(boolean correctionsEnabled) { this.correctionsEnabled = correctionsEnabled; }
+
+    public int getTotalConversations() { return totalConversations; }
+    public void setTotalConversations(int totalConversations) { this.totalConversations = totalConversations; }
 }

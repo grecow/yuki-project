@@ -1,137 +1,92 @@
 package com.killiancorbel.realtimeapi.services;
 
-import com.killiancorbel.realtimeapi.models.YukiData;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.killiancorbel.realtimeapi.models.Topic;
-import org.springframework.stereotype.Service;
+import com.killiancorbel.realtimeapi.models.YukiData;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class PromptService {
+    private final Logger logger = LoggerFactory.getLogger(PromptService.class);
+
     @Autowired
     private TopicService topicService;
 
-    private static final Map<String, String> LANGUAGE_CODES = Map.ofEntries(
-            Map.entry("French", "fr"),
-            Map.entry("Spanish", "es"),
-            Map.entry("Russian", "ru"),
-            Map.entry("Italian", "it"),
-            Map.entry("German", "de"),
-            Map.entry("Portuguese", "po"),
-            Map.entry("Japanese", "jp"),
-            Map.entry("Korean", "kr"),
-            Map.entry("Chinese", "ch"),
-            Map.entry("English", "en")
-    );
+    private final Map<String, Map<String, Object>> promptTemplates = new ConcurrentHashMap<>();
 
-    private static final Map<String, String> TEACHER_INTRO = Map.ofEntries(
-            Map.entry("French", "Vous êtes un professeur de français très adaptable et engageant."),
-            Map.entry("Spanish", "Eres un profesor de español altamente adaptable y dinámico."),
-            Map.entry("Russian", "Вы очень адаптивный и увлекательный учитель русского языка."),
-            Map.entry("Italian", "Sei un insegnante di italiano altamente adattabile e coinvolgente."),
-            Map.entry("German", "Sie sind ein hochgradig anpassungsfähiger und engagierter Deutschlehrer."),
-            Map.entry("Portuguese", "Você é um professor de português altamente adaptável e envolvente."),
-            Map.entry("Japanese", "あなたは非常に適応力があり、魅力的な日本語の先生です。"),
-            Map.entry("Korean", "당신은 매우 적응력 있고 매력적인 한국어 선생님입니다."),
-            Map.entry("Chinese", "你是一位非常灵活和有吸引力的中文老师。"),
-            Map.entry("English", "You are a highly adaptable and engaging English teacher.")
-    );
+    @PostConstruct
+    public void loadPrompts() {
+        try {
+            InputStream is = new ClassPathResource("prompts/prompts.json").getInputStream();
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> raw = mapper.readValue(is, Map.class);
+            for (Map.Entry<String, Object> entry : raw.entrySet()) {
+                promptTemplates.put(entry.getKey(), (Map<String, Object>) entry.getValue());
+            }
+            logger.info("Loaded prompt templates for {} languages", promptTemplates.size());
+        } catch (Exception e) {
+            logger.error("Failed to load prompts.json: {}", e.getMessage());
+        }
+    }
 
     public String getPrompt(YukiData yukiData) {
         String language = yukiData.getLanguage();
-        String code = LANGUAGE_CODES.getOrDefault(language, "en");
+        Map<String, Object> template = promptTemplates.getOrDefault(language, promptTemplates.get("English"));
+        if (template == null) {
+            return "You are Yuki, a language teacher. Keep responses under 30 tokens.";
+        }
+
+        String code = (String) template.get("code");
         Topic topicData = topicService.loadTopics(code);
         List<String> topics = levelFromYukiData(yukiData.getLevel(), topicData);
         String topic = topics.get(ThreadLocalRandom.current().nextInt(topics.size()));
 
-        return buildPrompt(yukiData, language, topic);
+        return buildPrompt(template, yukiData, topic);
     }
 
     public String getPlaygroundPrompt(YukiData yukiData) {
-        String language = yukiData.getLanguage();
-        String intro = TEACHER_INTRO.getOrDefault(language, TEACHER_INTRO.get("English"));
-        return intro + " " + getPlaygroundRules(language);
+        Map<String, Object> template = promptTemplates.getOrDefault(yukiData.getLanguage(), promptTemplates.get("English"));
+        if (template == null) return "";
+        return (String) template.getOrDefault("playground", "");
     }
 
-    private String buildPrompt(YukiData yukiData, String language, String topic) {
-        StringBuilder prompt = new StringBuilder();
+    private String buildPrompt(Map<String, Object> template, YukiData yukiData, String topic) {
+        StringBuilder sb = new StringBuilder();
 
-        // Role
-        String intro = TEACHER_INTRO.getOrDefault(language, TEACHER_INTRO.get("English"));
-        prompt.append(intro).append(" ");
+        // Teacher intro (in target language)
+        sb.append(template.get("teacher_intro")).append(" ");
 
-        // Level-specific instructions
-        prompt.append(getLevelInstructions(yukiData.getLevel(), language));
+        // Level instructions (in target language)
+        Map<String, String> levels = (Map<String, String>) template.get("levels");
+        String levelKey = String.valueOf(yukiData.getLevel());
+        sb.append(levels.getOrDefault(levelKey, levels.getOrDefault("0", ""))).append(" ");
 
-        // Tone
-        prompt.append("Your personality is friendly and dynamic. ");
-        prompt.append("Keep your responses concise, under 30 tokens. ");
-
-        // Topic introduction
-        prompt.append("Start with: 'Hi! I'm Yuki!' ");
-        prompt.append("Immediately follow up with a question about this topic: ").append(topic).append(". ");
+        // Greeting + topic
+        sb.append(template.get("greeting")).append(topic).append(". ");
 
         // Corrections
         if (yukiData.isToCorrect()) {
-            prompt.append(getCorrectionInstructions(yukiData.getLevel()));
+            sb.append(template.get("correction")).append(" ");
         }
 
         // Goal
-        prompt.append("Your goal is to make the conversation engaging and natural while ensuring effective speaking practice. ");
-        prompt.append("Your responses should always be under 30 tokens. Never elaborate too much. ");
-        prompt.append("The main objective is for the student to speak as much as possible. ");
+        sb.append(template.get("goal")).append(" ");
 
-        // Inline correction format (NEW)
-        prompt.append("When correcting, use this format: [CORRECTION: wrong phrase → correct phrase]. ");
-        prompt.append("This helps the student see exactly what to fix. ");
+        // Inline correction format
+        sb.append("When correcting, use format: [CORRECTION: wrong → correct]. ");
 
-        return prompt.toString();
-    }
-
-    private String getLevelInstructions(int level, String language) {
-        return switch (level) {
-            case 0 -> "Your student is at A1 level (beginner). " +
-                    "Use simple sentences and A1-level vocabulary. " +
-                    "Only correct major mistakes. " +
-                    "Keep answers under 30 tokens. Let the student speak as much as possible. " +
-                    "Do not give examples when asking questions. " +
-                    "Ask only one question at a time. ";
-            case 1 -> "Your student is at A2 level (elementary). " +
-                    "Use simple sentences and A2-level vocabulary. " +
-                    "Keep answers under 30 tokens. " +
-                    "Ask only one question at a time. ";
-            case 2 -> "Your student is at B1 level (intermediate). " +
-                    "Use B1-level words and phrases. " +
-                    "Choose engaging and creative topics. " +
-                    "Keep answers under 30 tokens. " +
-                    "Ask only one question at a time. ";
-            default -> "Your student is at B2 level (upper-intermediate). " +
-                    "Use natural B2-level conversation. " +
-                    "Choose creative and stimulating topics. " +
-                    "Keep answers under 30 tokens. " +
-                    "Ask only one question at a time. ";
-        };
-    }
-
-    private String getCorrectionInstructions(int level) {
-        if (level == 0) {
-            return "Correct only major mistakes in a supportive way. " +
-                    "For beginners, prioritize practice over corrections. " +
-                    "Use format: [CORRECTION: mistake → fix]. ";
-        }
-        return "Correct mistakes concisely: 'Great! We usually say [correct version].' " +
-                "Use format: [CORRECTION: mistake → fix]. " +
-                "Make corrections motivating, always under 30 tokens. ";
-    }
-
-    private String getPlaygroundRules(String language) {
-        return "Keep your responses concise, under 30 tokens. " +
-                "Your goal is to make the conversation engaging and natural. " +
-                "Never elaborate too much. The main objective is for the student to speak as much as possible. " +
-                "When correcting, use format: [CORRECTION: wrong → correct]. ";
+        return sb.toString();
     }
 
     private List<String> levelFromYukiData(int level, Topic topic) {

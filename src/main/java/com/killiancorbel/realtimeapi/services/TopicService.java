@@ -19,7 +19,7 @@ public class TopicService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, Topic> cache = new ConcurrentHashMap<>();
 
-    private static final String[] SUPPORTED_LANGUAGES = {"en", "fr", "es", "ru", "it", "de", "po", "jp", "kr", "ch"};
+    private static final String[] SUPPORTED_LANGUAGES = {"en", "fr", "es", "ru", "it", "de", "po", "jp", "kr", "ch", "ar", "hi", "tr"};
 
     @PostConstruct
     public void preloadTopics() {

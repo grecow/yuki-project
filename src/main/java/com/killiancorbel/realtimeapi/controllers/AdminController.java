@@ -188,4 +188,29 @@ public class AdminController {
         verifyAdmin(authorizationHeader);
         return statRepository.findAll(PageRequest.of(page, Math.min(size, 100))).getContent();
     }
+
+    @GetMapping(value = "/dashboard")
+    @ResponseBody
+    public java.util.Map<String, Object> getDashboard(@RequestHeader("Authorization") String authorizationHeader) {
+        verifyAdmin(authorizationHeader);
+        List<YukiData> all = yukiRepository.findAll();
+        long totalUsers = all.size();
+        long premiumUsers = all.stream().filter(YukiData::isPremium).count();
+        long activeToday = all.stream().filter(YukiData::isDoneToday).count();
+        long inTrial = all.stream().filter(YukiData::isInTrial).count();
+        double avgStreak = all.stream().mapToInt(YukiData::getStreak).average().orElse(0);
+        double avgXp = all.stream().mapToInt(YukiData::getXp).average().orElse(0);
+        long totalLessons = lessonRepository.count();
+
+        return java.util.Map.of(
+                "totalUsers", totalUsers,
+                "premiumUsers", premiumUsers,
+                "activeToday", activeToday,
+                "inTrial", inTrial,
+                "avgStreak", Math.round(avgStreak * 10.0) / 10.0,
+                "avgXp", Math.round(avgXp),
+                "totalLessons", totalLessons,
+                "conversionRate", totalUsers > 0 ? Math.round((premiumUsers * 100.0 / totalUsers) * 10.0) / 10.0 : 0
+        );
+    }
 }

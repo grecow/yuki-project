@@ -1,0 +1,50 @@
+{
+  "beginner": [
+    "Kendinizi tanıtmak ve selamlaşmak",
+    "Aile ve arkadaşlar hakkında konuşmak",
+    "Günlük aktiviteleri anlatmak",
+    "Restoranda yemek sipariş etmek",
+    "Şehirde basit yol tarifi vermek",
+    "Favori yemeğiniz hakkında konuşmak",
+    "Evinizi veya dairenizi tanımlamak",
+    "Saati sormak ve söylemek",
+    "Pazarda alışveriş yapmak",
+    "Hava durumu hakkında konuşmak"
+  ],
+  "intermediate": [
+    "Hobiler ve ilgi alanlarını paylaşmak",
+    "Seyahat planları hakkında konuşmak",
+    "Okul veya iş deneyimlerini anlatmak",
+    "Filmler ve müzik hakkında tartışmak",
+    "Sağlık ve fitness hakkında konuşmak",
+    "Türk gelenekleri ve kültürünü anlatmak",
+    "Alışveriş ve ürün karşılaştırması yapmak",
+    "Otel veya uçuş rezervasyonu yapmak",
+    "Doktora gitmek",
+    "Teknoloji hakkında konuşmak"
+  ],
+  "advanced": [
+    "Sosyal konuları tartışmak",
+    "Türk kültürü ve gelenekleri hakkında konuşmak",
+    "Çevre ve sürdürülebilirlik hakkında tartışmak",
+    "Müzakere ve problem çözme",
+    "Türk tarihi hakkında konuşmak",
+    "Eğitim ve gelecek hakkında tartışmak",
+    "Girişimcilik hakkında konuşmak",
+    "Karmaşık seyahat deneyimlerini anlatmak",
+    "Türk edebiyatı hakkında tartışmak",
+    "Ekonomi ve ticaret hakkında konuşmak"
+  ],
+  "expert": [
+    "Felsefe ve etik hakkında tartışmak",
+    "Güncel olayları analiz etmek",
+    "Yapay zeka ve teknolojinin geleceğini tartışmak",
+    "Uluslararası ilişkiler hakkında konuşmak",
+    "Çağdaş Türk edebiyatı ve şiiri analiz etmek",
+    "Ekonomik politikaları analiz etmek",
+    "İklim değişikliği hakkında tartışmak",
+    "Sanat ve estetik hakkında konuşmak",
+    "Kültürel çoğulculuk hakkında tartışmak",
+    "Medya ve dijital etkiyi analiz etmek"
+  ]
+}

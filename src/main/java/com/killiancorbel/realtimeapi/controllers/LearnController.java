@@ -4,6 +4,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.killiancorbel.realtimeapi.models.*;
 import com.killiancorbel.realtimeapi.repositories.*;
+import com.killiancorbel.realtimeapi.services.LessonGeneratorService;
+import com.killiancorbel.realtimeapi.services.UserProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,12 @@ public class LearnController {
     private ConversationHistoryRepository conversationHistoryRepository;
     @Autowired
     private FlashcardRepository flashcardRepository;
+    @Autowired
+    private DailyLessonRepository dailyLessonRepository;
+    @Autowired
+    private LessonGeneratorService lessonGeneratorService;
+    @Autowired
+    private UserProfileService userProfileService;
 
     private User getAuthenticatedUser(String authorizationHeader) {
         try {
@@ -41,6 +50,62 @@ public class LearnController {
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
         }
+    }
+
+    // ========== DAILY LESSONS ==========
+
+    @GetMapping("/daily-lessons")
+    @ResponseBody
+    public List<DailyLesson> getDailyLessons(@RequestHeader("Authorization") String auth) {
+        User user = getAuthenticatedUser(auth);
+        List<DailyLesson> lessons = dailyLessonRepository.findByUserAndLessonDate(user, LocalDate.now());
+        // If no lesson for today, generate one on-demand
+        if (lessons.isEmpty()) {
+            YukiData yd = yukiRepository.findByUser(user);
+            if (yd != null && yd.getLanguage() != null) {
+                DailyLesson lesson = lessonGeneratorService.generateLesson(user, yd);
+                if (lesson != null) lessons = List.of(lesson);
+            }
+        }
+        return lessons;
+    }
+
+    @PostMapping("/daily-lesson/{id}/complete")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> completeDailyLesson(
+            @RequestHeader("Authorization") String auth,
+            @PathVariable Integer id,
+            @RequestBody(required = false) Map<String, Object> body) {
+        User user = getAuthenticatedUser(auth);
+        DailyLesson lesson = dailyLessonRepository.findById(id)
+                .orElseThrow(() -> new AccessDeniedException("Lesson not found"));
+        lesson.setCompleted(true);
+        dailyLessonRepository.save(lesson);
+
+        // Update XP
+        YukiData yd = yukiRepository.findByUser(user);
+        if (yd != null) {
+            yd.addXp(lesson.getXpReward());
+            yd.setTotalConversations(yd.getTotalConversations() + 1);
+            yd.setDailyConversationsUsed(yd.getDailyConversationsUsed() + 1);
+            if (!yd.isDoneToday()) {
+                yd.setStreak(yd.getStreak() + 1);
+                if (yd.getStreak() > yd.getMaxStreak()) yd.setMaxStreak(yd.getStreak());
+            }
+            yd.setDoneToday(true);
+            yukiRepository.save(yd);
+        }
+
+        // Update learning profile
+        String corrections = body != null ? (String) body.getOrDefault("corrections", "") : "";
+        int duration = body != null ? (int) body.getOrDefault("durationMinutes", 5) : 5;
+        userProfileService.updateAfterConversation(user, "", corrections, duration);
+
+        return ResponseEntity.ok(Map.of(
+                "xpGained", lesson.getXpReward(),
+                "totalXp", yd != null ? yd.getXp() : 0,
+                "level", yd != null ? yd.getCalculatedLevel() : 1
+        ));
     }
 
     // ========== CONVERSATION HISTORY ==========

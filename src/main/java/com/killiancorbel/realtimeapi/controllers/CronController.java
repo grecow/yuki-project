@@ -2,8 +2,11 @@ package com.killiancorbel.realtimeapi.controllers;
 
 import java.time.LocalDate;
 
+import com.killiancorbel.realtimeapi.models.DailyLesson;
 import com.killiancorbel.realtimeapi.models.YukiData;
+import com.killiancorbel.realtimeapi.repositories.DailyLessonRepository;
 import com.killiancorbel.realtimeapi.repositories.YukiRepository;
+import com.killiancorbel.realtimeapi.services.LessonGeneratorService;
 import com.killiancorbel.realtimeapi.services.NotificationService;
 
 import org.slf4j.Logger;
@@ -27,6 +30,10 @@ public class CronController {
     StatRepository statRepository;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    LessonGeneratorService lessonGeneratorService;
+    @Autowired
+    DailyLessonRepository dailyLessonRepository;
 
     /**
      * Midnight: reset daily state, manage streaks, refill premium tokens.
@@ -84,5 +91,28 @@ public class CronController {
             }
         }
         logger.info("Streak risk reminders sent.");
+    }
+
+    /**
+     * 1 AM: Generate personalized daily lessons for active users.
+     */
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void generateDailyLessons() {
+        List<YukiData> allUsers = yukiRepository.findAll();
+        int generated = 0;
+        for (YukiData yd : allUsers) {
+            // Only generate for users who have completed onboarding and have been active
+            if (yd.getUser() == null || yd.getLanguage() == null || yd.getLanguage().isEmpty()) continue;
+            // Skip if already has a lesson for today
+            if (dailyLessonRepository.countByUserAndLessonDate(yd.getUser(), java.time.LocalDate.now()) > 0) continue;
+
+            try {
+                DailyLesson lesson = lessonGeneratorService.generateLesson(yd.getUser(), yd);
+                if (lesson != null) generated++;
+            } catch (Exception e) {
+                logger.error("Failed to generate lesson for user {}: {}", yd.getUser().getUid(), e.getMessage());
+            }
+        }
+        logger.info("Daily lessons generated: {} lessons for {} users", generated, allUsers.size());
     }
 }

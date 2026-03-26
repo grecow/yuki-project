@@ -41,6 +41,8 @@ public class YukiController {
     private String firebaseConfigPath;
     @Autowired
     private PromptService promptService;
+    @Autowired
+    private com.killiancorbel.realtimeapi.services.AuditService auditService;
     private final Logger logger = LoggerFactory.getLogger(YukiController.class);
 
     public YukiController() {
@@ -105,6 +107,7 @@ public class YukiController {
             ret.setCanStartConversation(yukiData.canStartConversation());
             ret.setCorrectionsEnabled(yukiData.isPremium() || yukiData.isInTrial());
             ret.setTotalConversations(yukiData.getTotalConversations());
+            auditService.logLogin(user.getUid());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
@@ -128,6 +131,7 @@ public class YukiController {
             int xpGained = wordsLearned * 2 + phrasesLearned * 10;
             yukiData.addXp(xpGained);
             yukiRepository.save(yukiData);
+            auditService.log(user.getUid(), "discovery_completed", "product", "xp:" + xpGained);
             return ResponseEntity.ok(java.util.Map.of(
                 "xpGained", xpGained,
                 "wordsLearned", wordsLearned,
@@ -157,6 +161,7 @@ public class YukiController {
             yukiData.setTrialEndDate(java.time.LocalDateTime.now().plusDays(7));
             yukiData.setTokens(15000);
             yukiRepository.save(yukiData);
+            auditService.logTrialStarted(user.getUid());
             return ResponseEntity.ok(java.util.Map.of("status", "trial_started", "daysLeft", 7));
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");

@@ -26,6 +26,12 @@ public class AdminController {
     private LessonDoneRepository lessonDoneRepository;
     @Autowired
     private AchievementRepository achievementRepository;
+    @Autowired
+    private com.killiancorbel.realtimeapi.repositories.AuditLogRepository auditLogRepository;
+    @Autowired
+    private com.killiancorbel.realtimeapi.repositories.PrivacyRequestRepository privacyRequestRepository;
+    @Autowired
+    private com.killiancorbel.realtimeapi.repositories.DailyLessonRepository dailyLessonRepository;
 
     @Value("${app.admin-token}")
     private String adminToken;
@@ -202,15 +208,31 @@ public class AdminController {
         double avgXp = all.stream().mapToInt(YukiData::getXp).average().orElse(0);
         long totalLessons = lessonRepository.count();
 
-        return java.util.Map.of(
-                "totalUsers", totalUsers,
-                "premiumUsers", premiumUsers,
-                "activeToday", activeToday,
-                "inTrial", inTrial,
-                "avgStreak", Math.round(avgStreak * 10.0) / 10.0,
-                "avgXp", Math.round(avgXp),
-                "totalLessons", totalLessons,
-                "conversionRate", totalUsers > 0 ? Math.round((premiumUsers * 100.0 / totalUsers) * 10.0) / 10.0 : 0
-        );
+        // Compliance metrics
+        long pendingPrivacyRequests = privacyRequestRepository.countByStatus("pending");
+        long totalAuditLogs = auditLogRepository.countByCreatedAtAfter(java.time.LocalDateTime.now().minusDays(7));
+        long generatedLessons = dailyLessonRepository.count();
+
+        // Language distribution
+        java.util.Map<String, Long> langDist = new java.util.HashMap<>();
+        for (YukiData yd : all) {
+            String lang = yd.getLanguage() != null ? yd.getLanguage() : "unknown";
+            langDist.merge(lang, 1L, Long::sum);
+        }
+
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
+        result.put("totalUsers", totalUsers);
+        result.put("premiumUsers", premiumUsers);
+        result.put("activeToday", activeToday);
+        result.put("inTrial", inTrial);
+        result.put("avgStreak", Math.round(avgStreak * 10.0) / 10.0);
+        result.put("avgXp", Math.round(avgXp));
+        result.put("totalLessons", totalLessons);
+        result.put("conversionRate", totalUsers > 0 ? Math.round((premiumUsers * 100.0 / totalUsers) * 10.0) / 10.0 : 0);
+        result.put("pendingPrivacyRequests", pendingPrivacyRequests);
+        result.put("auditLogsLast7Days", totalAuditLogs);
+        result.put("generatedLessons", generatedLessons);
+        result.put("languageDistribution", langDist);
+        return result;
     }
 }

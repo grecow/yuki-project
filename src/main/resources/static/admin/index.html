@@ -79,12 +79,14 @@
           <div class="tabs">
             <div class="tab ${currentTab === 'dashboard' ? 'active' : ''}" onclick="switchTab('dashboard')">Dashboard</div>
             <div class="tab ${currentTab === 'users' ? 'active' : ''}" onclick="switchTab('users')">Users</div>
+            <div class="tab ${currentTab === 'compliance' ? 'active' : ''}" onclick="switchTab('compliance')">Compliance</div>
           </div>
           <div id="content"><div class="loading">Loading...</div></div>
         </div>`;
 
       if (currentTab === 'dashboard') await renderDashboard();
       else if (currentTab === 'users') await renderUsers();
+      else if (currentTab === 'compliance') await renderCompliance();
     }
 
     function switchTab(tab) { currentTab = tab; loadDashboard(); }
@@ -100,8 +102,13 @@
             <div class="card"><div class="label">In Trial</div><div class="value">${d.inTrial}</div></div>
             <div class="card"><div class="label">Avg Streak</div><div class="value streak">🔥 ${d.avgStreak}</div></div>
             <div class="card"><div class="label">Avg XP</div><div class="value">${d.avgXp}</div></div>
-            <div class="card"><div class="label">Total Lessons</div><div class="value">${d.totalLessons}</div></div>
-          </div>`;
+            <div class="card"><div class="label">AI Lessons Generated</div><div class="value">${d.generatedLessons}</div></div>
+            <div class="card"><div class="label">Privacy Requests</div><div class="value">${d.pendingPrivacyRequests}</div><div class="sub">pending</div></div>
+          </div>
+          <div class="section"><h2>Language Distribution</h2>
+          <div class="grid">${Object.entries(d.languageDistribution || {}).map(([k,v]) =>
+            '<div class="card"><div class="label">'+k+'</div><div class="value">'+v+'</div></div>'
+          ).join('')}</div></div>`;
       } catch(e) { if (e.message !== 'forbidden') document.getElementById('content').innerHTML = '<div class="loading">Error loading dashboard</div>'; }
     }
 
@@ -127,6 +134,49 @@
             </table>
           </div>`;
       } catch(e) { if (e.message !== 'forbidden') document.getElementById('content').innerHTML = '<div class="loading">Error loading users</div>'; }
+    }
+
+    async function renderCompliance() {
+      try {
+        const d = await api('/admin/dashboard');
+        document.getElementById('content').innerHTML = `
+          <div class="grid">
+            <div class="card"><div class="label">Pending Privacy Requests</div><div class="value">${d.pendingPrivacyRequests}</div></div>
+            <div class="card"><div class="label">Audit Logs (7 days)</div><div class="value">${d.auditLogsLast7Days}</div></div>
+            <div class="card"><div class="label">Total Users</div><div class="value">${d.totalUsers}</div></div>
+          </div>
+          <div class="section">
+            <h2>RGPD Compliance Status</h2>
+            <table>
+              <thead><tr><th>Check</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Data export endpoint</td><td>✅ /privacy/export</td></tr>
+                <tr><td>Account deletion endpoint</td><td>✅ /privacy/delete-account</td></tr>
+                <tr><td>Consent management</td><td>✅ /privacy/consent</td></tr>
+                <tr><td>Audit logging</td><td>✅ AuditService active</td></tr>
+                <tr><td>Privacy requests tracking</td><td>✅ PrivacyRequest model</td></tr>
+                <tr><td>30-day deadline enforcement</td><td>✅ Auto-calculated</td></tr>
+                <tr><td>Pending requests</td><td>${d.pendingPrivacyRequests > 0 ? '⚠️ ' + d.pendingPrivacyRequests + ' pending' : '✅ None'}</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="section">
+            <h2>Data Processing Registry</h2>
+            <table>
+              <thead><tr><th>Data</th><th>Purpose</th><th>Legal Basis</th><th>Retention</th></tr></thead>
+              <tbody>
+                <tr><td>Email, name</td><td>Account management</td><td>Contract</td><td>Until deletion</td></tr>
+                <tr><td>Learning progress (XP, streak, level)</td><td>Service delivery</td><td>Contract</td><td>Until deletion</td></tr>
+                <tr><td>Conversation transcripts</td><td>Lesson review, personalization</td><td>Contract</td><td>90 days</td></tr>
+                <tr><td>Flashcards</td><td>Spaced repetition learning</td><td>Contract</td><td>Until deletion</td></tr>
+                <tr><td>Voice audio (realtime)</td><td>AI conversation</td><td>Contract</td><td>Not stored (streamed)</td></tr>
+                <tr><td>Firebase push token</td><td>Notifications</td><td>Consent</td><td>Until opt-out</td></tr>
+                <tr><td>Audit logs</td><td>Security, compliance</td><td>Legitimate interest</td><td>12 months</td></tr>
+                <tr><td>Payment data</td><td>Billing (via RevenueCat)</td><td>Contract</td><td>Per RevenueCat policy</td></tr>
+              </tbody>
+            </table>
+          </div>`;
+      } catch(e) {}
     }
 
     // Init

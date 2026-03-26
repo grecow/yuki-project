@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_DATABASE: ${MYSQL_DB:-realtime}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DB: ${MYSQL_DB:-realtime}
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      DDL_AUTO: update
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev-admin-token}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      FIREBASE_KEY_PATH: /app/src/main/resources/firebase-key.json
+      STORAGE_PATH: /app/storage/
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src/main/resources/firebase-key.json:/app/src/main/resources/firebase-key.json:ro
+      - storage_data:/app/storage
+
+volumes:
+  mysql_data:
+  storage_data:

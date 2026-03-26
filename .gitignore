@@ -36,3 +36,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Environment ###
+.env
+*.env.local
+storage/
+
+### OS ###
+.DS_Store
+Thumbs.db

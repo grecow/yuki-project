@@ -29,6 +29,7 @@ public class YukiData {
     private int vocabulary = 0;
     private boolean doneToday = false;
     private boolean notifications = false;
+    private int xp = 0;
 
     public Long getId() {
         return id;
@@ -174,5 +175,47 @@ public class YukiData {
 
     public void setNotifications(boolean notifications) {
         this.notifications = notifications;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+
+    public void addXp(int amount) {
+        this.xp += amount;
+    }
+
+    /**
+     * Calculate user level based on XP.
+     * Each level requires progressively more XP.
+     * Level 1: 0 XP, Level 2: 100 XP, Level 3: 300 XP, etc.
+     */
+    public int getCalculatedLevel() {
+        if (xp < 100) return 1;
+        if (xp < 300) return 2;
+        if (xp < 600) return 3;
+        if (xp < 1000) return 4;
+        if (xp < 1500) return 5;
+        if (xp < 2100) return 6;
+        if (xp < 2800) return 7;
+        if (xp < 3600) return 8;
+        if (xp < 4500) return 9;
+        return 10 + (xp - 4500) / 1000;
+    }
+
+    /**
+     * XP needed to reach the next level.
+     */
+    public int getXpForNextLevel() {
+        int[] thresholds = {100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500};
+        for (int t : thresholds) {
+            if (xp < t) return t;
+        }
+        int currentLevel = getCalculatedLevel();
+        return 4500 + (currentLevel - 9) * 1000;
     }
 }

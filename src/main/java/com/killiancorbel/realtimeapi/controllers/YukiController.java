@@ -95,6 +95,10 @@ public class YukiController {
             ret.setLanguage(yukiData.getLanguage());
             ret.setLessonsDone(yukiData.getLessonsDone());
             ret.setNotifications(yukiData.isNotifications());
+            ret.setXp(yukiData.getXp());
+            ret.setUserLevel(yukiData.getCalculatedLevel());
+            ret.setXpForNextLevel(yukiData.getXpForNextLevel());
+            ret.setGoal(yukiData.getGoal());
             return ret;
         } catch (Exception e) {
             throw new AccessDeniedException("Not authorized");
@@ -267,22 +271,39 @@ public class YukiController {
             yukiData.setVocabulary(body.getVocabulary());
             yukiData.setSentences(body.getSentences() + yukiData.getSentences());
             yukiData.setTimeStudied(body.getTimeStudied() + yukiData.getTimeStudied());
+
+            // XP calculation
+            int xpGained = 0;
+            xpGained += body.getSentences() * 2;           // 2 XP per sentence
+            xpGained += (body.getTimeStudied() / 60) * 5;  // 5 XP per minute studied
+            xpGained += body.getVocabulary();               // 1 XP per word
+
             if (!body.getLessonsDone().isEmpty()) {
                 if (!yukiData.isDoneToday()) {
                     yukiData.setStreak(yukiData.getStreak() + 1);
                     if (yukiData.getStreak() > yukiData.getMaxStreak()) {
                         yukiData.setMaxStreak(yukiData.getStreak());
                     }
+                    xpGained += 10; // Streak bonus
                 }
                 yukiData.setDoneToday(true);
+                xpGained += 25; // Lesson completion bonus
                 LessonDone d = new LessonDone();
                 d.setLesson_id(body.getLessonsDone().get(0).getLesson_id());
                 d.setDate(body.getLessonsDone().get(0).getDate());
                 lessonDoneRepository.save(d);
                 yukiData.addLessonsDone(d);
             }
+
+            yukiData.addXp(xpGained);
             yukiRepository.save(yukiData);
-            return ResponseEntity.ok("ok");
+
+            // Return XP gained for frontend animation
+            return ResponseEntity.ok(java.util.Map.of(
+                "xpGained", xpGained,
+                "totalXp", yukiData.getXp(),
+                "level", yukiData.getCalculatedLevel()
+            ));
         } catch (Exception e) {
             logger.info(e.getMessage());
             throw new AccessDeniedException("Not authorized");

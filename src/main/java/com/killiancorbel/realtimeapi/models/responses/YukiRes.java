@@ -23,6 +23,10 @@ public class YukiRes {
     private List<Achievement> achievements;
     private List<LessonDone> lessonsDone;
     private boolean notifications;
+    private int xp;
+    private int userLevel;
+    private int xpForNextLevel;
+    private int goal;
 
     public int getTokens() {
         return tokens;
@@ -142,5 +146,37 @@ public class YukiRes {
 
     public void setNotifications(boolean notifications) {
         this.notifications = notifications;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+
+    public int getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(int userLevel) {
+        this.userLevel = userLevel;
+    }
+
+    public int getXpForNextLevel() {
+        return xpForNextLevel;
+    }
+
+    public void setXpForNextLevel(int xpForNextLevel) {
+        this.xpForNextLevel = xpForNextLevel;
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
     }
 }

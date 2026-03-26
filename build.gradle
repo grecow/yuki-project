@@ -30,5 +30,8 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.11.0'
 	implementation 'javax.xml.bind:jaxb-api:2.1'
 	implementation 'com.google.firebase:firebase-admin:9.4.2'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
